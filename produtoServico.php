@@ -1,4 +1,14 @@
+
+
 <!DOCTYPE html>
+<?php
+require_once 'lib/Servico.php';
+require_once 'lib/Produtos.php';
+require_once 'lib/Colaboradores.php';
+require_once 'lib/Cliente.php';
+require_once 'lib/ProdutoServico.php';
+$servico = $_GET['id'];
+ ?>
 <html>
 
 <head>
@@ -6,7 +16,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Basic Form</title>
+    <title>Serviços</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -15,33 +25,50 @@
     <link href="css/style.css" rel="stylesheet">
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-function inserirProduto(){
-  var nome = document.getElementById('nome').value;
-  var codigo = document.getElementById('codigo').value;
-  var valor = document.getElementById('valor').value;
-  var qtd = document.getElementById('qtd').value;
-  var aplicacao = document.getElementById('aplicacao').value;
-  alert(nome+" - "+valor+" - "+qtd+" - "+aplicacao)
-  $.post("actions/ProdutosAC.php",
+
+function adicionarProduto(id){
+  var servico = document.getElementById('idservico').value;
+  $.post("actions/ProdutoServicoAC.php",
   {
-      op:1,
-      nome:nome,
-      codigo:codigo,
-      valor:valor,
-      qtd:qtd,
-      aplicacao:aplicacao
+    op:1,
+    servico:servico,
+    produto:id,
+    qtd:2
   },
   function(data,status){
-    alert(data)
+    if(data == 'ok'){
+      location.reload();
+    }else{
+      alert(data);
+    }
+  });
+}
+
+function removerProduto(produto){
+  var servico = document.getElementById('idservico').value;
+  $.post("actions/ProdutoServicoAC.php",
+  {
+    op:2,
+    servico:servico,
+    produto:produto,
+  },
+  function(data,status){
+    if(data == 'ok'){
+      location.reload();
+    }else{
+      alert(data);
+    }
   });
 }
 
 </script>
+
 </head>
 
 <body>
-
+    <input type="hidden" name="idservico" id="idservico" value="<?php echo $servico?>">
     <div id="wrapper">
 
     <nav class="navbar-default navbar-static-side" role="navigation">
@@ -52,8 +79,8 @@ function inserirProduto(){
                             <img alt="image" class="img-circle" src="img/profile_small.jpg" />
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Daniel Melo</strong>
+                            </span> <span class="text-muted text-xs block">Desenvolvedor <b class="caret"></b></span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a href="profile.html">Profile</a></li>
                             <li><a href="contacts.html">Contacts</a></li>
@@ -72,29 +99,17 @@ function inserirProduto(){
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Nova Peça</a></li>
-                        <li><a href="index.html">Minhas Peças</a></li>
-                    </ul>
+                    <a href="novapeca.php"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span></a>
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Serviço</a></li>
-                        <li><a href="index.html">Tabela de Serviços</a></li>
-                    </ul>
+                    <a href="servico.php"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Cliente</a></li>
-                        <li><a href="index.html">Meus Clientes</a></li>
-                    </ul>
+                    <a href="cliente.php"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -109,13 +124,13 @@ function inserirProduto(){
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" action="search_results.html">
                 <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
                 </div>
             </form>
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                    <span class="m-r-sm text-muted welcome-message"></span>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -216,7 +231,7 @@ function inserirProduto(){
 
                 <li>
                     <a href="login.html">
-                        <i class="fa fa-sign-out"></i> Log out
+                        <i class="fa fa-sign-out"></i> Sair
                     </a>
                 </li>
             </ul>
@@ -225,16 +240,16 @@ function inserirProduto(){
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Basic Form</h2>
+                    <h2>Detalhes do Serviço</h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            <a>Forms</a>
+                            <a>Serviços</a>
                         </li>
-                        <li class="active">
-                            <strong>Basic Form</strong>
+                        <li>
+                            <a>Detalhes</a>
                         </li>
                     </ol>
                 </div>
@@ -245,61 +260,10 @@ function inserirProduto(){
         <div class="wrapper wrapper-content animated fadeInRight">
 
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Cadastre uma nova peça</h5>
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-wrench"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user">
-                                    <li><a href="#">Config option 1</a>
-                                    </li>
-                                    <li><a href="#">Config option 2</a>
-                                    </li>
-                                </ul>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="ibox-content">
-                            <form method="get" class="form-horizontal">
-                                <div class="form-group"><label class="col-sm-2 control-label">Descrição</label>
-                                    <div class="col-sm-10"><input type="text" id="nome" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Código</label>
-                                    <div class="col-sm-10"><input type="text" id="codigo" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Aplicação</label>
-                                    <div class="col-sm-10"><input type="text" id="aplicacao" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Valor</label>
-                                    <div class="col-sm-10"><input type="text" id="valor" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Quantidade</label>
-                                    <div class="col-sm-10"><input type="text" id="qtd" class="form-control"></div>
-                                </div>
-
-                                <div class="hr-line-dashed"></div>
-                                <div class="form-group">
-                                        <button class="btn btn-primary" type="button" onclick="inserirProduto()" style="float:right; margin-left:10px">Salvar</button>
-                                        <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Tabela de peças</h5>
+                        <h5>Produtos</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -324,42 +288,95 @@ function inserirProduto(){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>COD</th>
-                        <th>DESCRIÇÃO</th>
-                        <th>QTD</th>
+                        <th>PEÇA</th>
                         <th>VALOR</th>
-                        <th>APL.</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
+                      <?php
+                        $c = new Produtos();
+                        foreach ($c->listarProdutos() as $key => $value) {
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $value->pro_nome ?></td>
+                            <td><?php echo $value->pro_valor ?></td>
+                            <td style="text-align:center"><a href="#" style="text-align:center;color:#33cc33" onclick="adicionarProduto(<?php echo $value->pro_id ?>)"><i class="fa fa-plus"></i></a></td>
+                        </tr>
+                        <?php
+                        }
+                       ?>
 
-                    <tr class="gradeX">
-                        <td>1234FR</td>
-                        <td>Caixa sup. Uno
-                        </td>
-                        <td>15</td>
-                        <td class="center">40,00</td>
-                        <td class="center">Uno,Elba</td>
-                    </tr>
-                    <tr class="gradeC">
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
+                      <th>PEÇA</th>
+                      <th>VALOR</th>
+                      <th></th>
                     </tr>
                     </tfoot>
+                    </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Produtos Adicionados</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                      <thead>
+                      <tr>
+                          <th>PEÇA</th>
+                          <th>VALOR</th>
+                          <th></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                          $c = new ProdutoServicos();
+                          foreach ($c->listarProdutosAdicionados($_GET['id']) as $key => $value) {
+                          ?>
+                          <tr class="gradeX">
+                              <td><?php echo $value->pro_nome ?></td>
+                              <td><?php echo $value->pro_valor ?></td>
+                              <td style="text-align:center;color:#ffe344"><a href="#" style="text-align:center;color:#ff0000" onclick="removerProduto(<?php echo $value->pro_id ?>)"><i class="fa fa-times"></i></a></td>
+                          </tr>
+                          <?php
+                          }
+                         ?>
+
+                      </tbody>
+                      <tfoot>
+                      <tr>
+                        <th>PEÇA</th>
+                        <th>VALOR</th>
+                        <th></th>
+                      </tr>
+                      </tfoot>
                     </table>
                         </div>
 

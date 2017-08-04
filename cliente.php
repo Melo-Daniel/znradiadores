@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+require_once 'lib/Cliente.php';
+ ?>
 <html>
 
 <head>
@@ -16,24 +19,23 @@
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 <script type="text/javascript">
-function inserirProduto(){
+function inserirCliente(){
   var nome = document.getElementById('nome').value;
-  var codigo = document.getElementById('codigo').value;
-  var valor = document.getElementById('valor').value;
-  var qtd = document.getElementById('qtd').value;
-  var aplicacao = document.getElementById('aplicacao').value;
-  alert(nome+" - "+valor+" - "+qtd+" - "+aplicacao)
-  $.post("actions/ProdutosAC.php",
+  var telefone = document.getElementById('telefone').value;
+  var descricao = document.getElementById('descricao').value;
+  var placa = document.getElementById('placa').value;
+  $.post("actions/ClientesAC.php",
   {
       op:1,
       nome:nome,
-      codigo:codigo,
-      valor:valor,
-      qtd:qtd,
-      aplicacao:aplicacao
+      telefone:telefone,
+      descricao:descricao,
+      placa:placa
   },
   function(data,status){
-    alert(data)
+    if(data == 'ok'){
+      location.reload();
+    }
   });
 }
 
@@ -52,8 +54,8 @@ function inserirProduto(){
                             <img alt="image" class="img-circle" src="img/profile_small.jpg" />
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Daniel Melo</strong>
+                            </span> <span class="text-muted text-xs block">Desenvolvedor <b class="caret"></b></span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a href="profile.html">Profile</a></li>
                             <li><a href="contacts.html">Contacts</a></li>
@@ -72,11 +74,7 @@ function inserirProduto(){
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Nova Peça</a></li>
-                        <li><a href="index.html">Minhas Peças</a></li>
-                    </ul>
+                    <a href="novapeca.php"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span></a>
                 </li>
 
                 <li>
@@ -87,14 +85,10 @@ function inserirProduto(){
                     </ul>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Cliente</a></li>
-                        <li><a href="index.html">Meus Clientes</a></li>
-                    </ul>
+                    <a href="cliente.php"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -109,13 +103,13 @@ function inserirProduto(){
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" action="search_results.html">
                 <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
                 </div>
             </form>
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                    <span class="m-r-sm text-muted welcome-message"></span>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -216,7 +210,7 @@ function inserirProduto(){
 
                 <li>
                     <a href="login.html">
-                        <i class="fa fa-sign-out"></i> Log out
+                        <i class="fa fa-sign-out"></i> Sair
                     </a>
                 </li>
             </ul>
@@ -225,16 +219,13 @@ function inserirProduto(){
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Basic Form</h2>
+                    <h2>Clientes</h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            <a>Forms</a>
-                        </li>
-                        <li class="active">
-                            <strong>Basic Form</strong>
+                            <a>Clientes</a>
                         </li>
                     </ol>
                 </div>
@@ -248,7 +239,7 @@ function inserirProduto(){
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>Cadastre uma nova peça</h5>
+                            <h5>Cadastre um novo cliente</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -269,25 +260,22 @@ function inserirProduto(){
                         </div>
                         <div class="ibox-content">
                             <form method="get" class="form-horizontal">
-                                <div class="form-group"><label class="col-sm-2 control-label">Descrição</label>
+                                <div class="form-group"><label class="col-sm-2 control-label">Nome</label>
                                     <div class="col-sm-10"><input type="text" id="nome" class="form-control"></div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Código</label>
-                                    <div class="col-sm-10"><input type="text" id="codigo" class="form-control"></div>
+                                <div class="form-group"><label class="col-sm-2 control-label">Telefone</label>
+                                    <div class="col-sm-10"><input type="text" id="telefone" class="form-control"></div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Aplicação</label>
-                                    <div class="col-sm-10"><input type="text" id="aplicacao" class="form-control"></div>
+                                <div class="form-group"><label class="col-sm-2 control-label">Carro</label>
+                                    <div class="col-sm-10"><input type="text" id="descricao" class="form-control"></div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Valor</label>
-                                    <div class="col-sm-10"><input type="text" id="valor" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Quantidade</label>
-                                    <div class="col-sm-10"><input type="text" id="qtd" class="form-control"></div>
+                                <div class="form-group"><label class="col-sm-2 control-label">Placa</label>
+                                    <div class="col-sm-10"><input type="text" id="placa" class="form-control"></div>
                                 </div>
 
                                 <div class="hr-line-dashed"></div>
                                 <div class="form-group">
-                                        <button class="btn btn-primary" type="button" onclick="inserirProduto()" style="float:right; margin-left:10px">Salvar</button>
+                                        <button class="btn btn-primary" type="button" onclick="inserirCliente()" style="float:right; margin-left:10px">Salvar</button>
                                         <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
                                 </div>
                             </form>
@@ -299,7 +287,7 @@ function inserirProduto(){
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Tabela de peças</h5>
+                        <h5>Clientes</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -324,40 +312,34 @@ function inserirProduto(){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>COD</th>
-                        <th>DESCRIÇÃO</th>
-                        <th>QTD</th>
-                        <th>VALOR</th>
-                        <th>APL.</th>
+                        <th>NOME</th>
+                        <th>TELEFONE</th>
+                        <th>CARRO</th>
+                        <th>PLACA</th>
                     </tr>
                     </thead>
                     <tbody>
+                      <?php
+                        $c = new Clientes();
+                        foreach ($c->listarClientes() as $key => $value) {
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $value->cli_nome ?></td>
+                            <td><?php echo $value->cli_telefone ?></td>
+                            <td><?php echo $value->car_descricao ?></td>
+                            <td class="center"><?php echo $value->car_placa ?></td>
+                        </tr>
+                        <?php
+                        }
+                       ?>
 
-                    <tr class="gradeX">
-                        <td>1234FR</td>
-                        <td>Caixa sup. Uno
-                        </td>
-                        <td>15</td>
-                        <td class="center">40,00</td>
-                        <td class="center">Uno,Elba</td>
-                    </tr>
-                    <tr class="gradeC">
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
+                        <th>NOME</th>
+                        <th>TELEFONE</th>
+                        <th>CARRO</th>
+                        <th>PLACA</th>
                     </tr>
                     </tfoot>
                     </table>

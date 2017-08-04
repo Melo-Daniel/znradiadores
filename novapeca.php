@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+require_once 'lib/Produtos.php';
+ ?>
 <html>
 
 <head>
@@ -22,7 +25,6 @@ function inserirProduto(){
   var valor = document.getElementById('valor').value;
   var qtd = document.getElementById('qtd').value;
   var aplicacao = document.getElementById('aplicacao').value;
-  alert(nome+" - "+valor+" - "+qtd+" - "+aplicacao)
   $.post("actions/ProdutosAC.php",
   {
       op:1,
@@ -33,7 +35,9 @@ function inserirProduto(){
       aplicacao:aplicacao
   },
   function(data,status){
-    alert(data)
+    if(data == 'ok'){
+      location.reload();
+    }
   });
 }
 
@@ -52,8 +56,8 @@ function inserirProduto(){
                             <img alt="image" class="img-circle" src="img/profile_small.jpg" />
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Daniel Melo</strong>
+                            </span> <span class="text-muted text-xs block">Desenvolvedor <b class="caret"></b></span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a href="profile.html">Profile</a></li>
                             <li><a href="contacts.html">Contacts</a></li>
@@ -109,13 +113,13 @@ function inserirProduto(){
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" action="search_results.html">
                 <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
                 </div>
             </form>
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                    <span class="m-r-sm text-muted welcome-message"></span>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -216,7 +220,7 @@ function inserirProduto(){
 
                 <li>
                     <a href="login.html">
-                        <i class="fa fa-sign-out"></i> Log out
+                        <i class="fa fa-sign-out"></i> Sair
                     </a>
                 </li>
             </ul>
@@ -225,16 +229,13 @@ function inserirProduto(){
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Basic Form</h2>
+                    <h2>Peças</h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            <a>Forms</a>
-                        </li>
-                        <li class="active">
-                            <strong>Basic Form</strong>
+                            <a>Peças</a>
                         </li>
                     </ol>
                 </div>
@@ -332,24 +333,21 @@ function inserirProduto(){
                     </tr>
                     </thead>
                     <tbody>
+                      <?php
+                        $p = new Produtos();
+                        foreach ($p->listarProdutos() as $key => $value) {
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $value->pro_codigo ?></td>
+                            <td><?php echo $value->pro_nome ?></td>
+                            <td><?php echo $value->pro_qtd ?></td>
+                            <td class="center"><?php echo $value->pro_valor ?></td>
+                            <td class="center"><?php echo $value->pro_aplicacao ?></td>
+                        </tr>
+                        <?php
+                        }
+                       ?>
 
-                    <tr class="gradeX">
-                        <td>1234FR</td>
-                        <td>Caixa sup. Uno
-                        </td>
-                        <td>15</td>
-                        <td class="center">40,00</td>
-                        <td class="center">Uno,Elba</td>
-                    </tr>
-                    <tr class="gradeC">
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
