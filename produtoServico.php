@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <?php
 require_once 'lib/Servico.php';
@@ -35,7 +33,7 @@ function adicionarProduto(id){
     op:1,
     servico:servico,
     produto:id,
-    qtd:2
+    qtd:1
   },
   function(data,status){
     if(data == 'ok'){
@@ -384,9 +382,18 @@ function removerProduto(produto){
                 </div>
             </div>
             </div>
+            <div class="footer">
+                <div class="pull-right">
+                  <button class="btn btn-white" type="reset">Cancelar</button>
+                  <!--<button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Pagamento</button>-->
+                  <a href="pagamento.php?id=<?php echo $servico?>" class="btn btn-primary">Pagamento</a>
+                </div>
+            </div>
         </div>
         </div>
+
         </div>
+
 
 
     <!-- Mainly scripts -->

@@ -46,7 +46,7 @@ function iniciarServico(){
 </script>
 </head>
 
-<body>
+<body class="mini-navbar">
 
     <div id="wrapper">
 
@@ -74,7 +74,7 @@ function iniciarServico(){
                 </li>
                 <!-- Inicio menu lateral -->
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Geral</span></a>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
                 </li>
 
                 <li>
@@ -82,13 +82,13 @@ function iniciarServico(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
-                    <a href="cliente.php"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span></a>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="colaboradores.php"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -101,11 +101,7 @@ function iniciarServico(){
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html">
-                <div class="form-group">
-                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
-                </div>
-            </form>
+
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
@@ -237,7 +233,7 @@ function iniciarServico(){
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
+                    <div class="ibox float-e-margins collapsed">
                         <div class="ibox-title">
                             <h5>Inicie um novo serviço</h5>
                             <div class="ibox-tools">
@@ -292,8 +288,10 @@ function iniciarServico(){
                                 </div>
                                 <div class="hr-line-dashed"></div>
                                 <div class="form-group">
-                                        <button class="btn btn-primary" type="button" onclick="iniciarServico()" style="float:right; margin-left:10px">Iniciar Serviço</button>
-                                        <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
+                                  <div class="pull-right">
+                                    <button class="btn btn-white" type="reset" >Cancelar</button>
+                                    <button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Iniciar Serviço</button>
+                                  </div>
                                 </div>
                             </form>
                         </div>

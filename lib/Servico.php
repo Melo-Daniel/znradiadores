@@ -41,11 +41,35 @@ class Servicos extends DB{
 
   public function listarServicos(){
     $sql = "select * from tb_servicos
-	  join tb_clientes on(cli_id = ser_cli_id)
-    join tb_carros on (cli_id = car_cli_id)
-    join tb_status_servicos on(sts_id = ser_sts_id)
-    join tb_formas_pagamentos on(fpg_id = ser_fpg_id)
-    join tb_colaboradores on(col_id = ser_col_id)";
+	         join tb_clientes on(cli_id = ser_cli_id)
+           join tb_carros on (cli_id = car_cli_id)
+           join tb_status_servicos on(sts_id = ser_sts_id)
+           join tb_formas_pagamentos on(fpg_id = ser_fpg_id)
+           join tb_colaboradores on(col_id = ser_col_id) where ser_data = current_date()";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
+  public function listarServico($id){
+    $sql = "select * from tb_servicos
+	         join tb_clientes on(cli_id = ser_cli_id)
+           join tb_carros on (cli_id = car_cli_id)
+           join tb_status_servicos on(sts_id = ser_sts_id)
+           join tb_formas_pagamentos on(fpg_id = ser_fpg_id)
+           join tb_colaboradores on(col_id = ser_col_id) where ser_id = $id";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+
+  public function listarFaturamentoDiarioSemana(){
+    $sql = "select sum(ser_valor) from tb_servicos where ser_sts_id = 3 group by ser_data limit 7;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
+  public function listarFaturamentoDoDia(){
+    $sql = "select sum(ser_valor) from tb_servicos where ser_sts_id = 3 and ser_data = current_date();";
     $stm = DB::prepare($sql);
     $stm->execute();
     return $stm->fetchAll();

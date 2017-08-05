@@ -19,7 +19,7 @@ require_once 'lib/Colaboradores.php';
 
 </head>
 
-<body>
+<body class="mini-navbar">
 
     <div id="wrapper">
 
@@ -42,9 +42,28 @@ require_once 'lib/Colaboradores.php';
                         </ul>
                     </div>
                     <div class="logo-element">
-                        IN+
+                        ZN
                     </div>
                 </li>
+                <!-- Inicio menu lateral -->
+                <li>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
+                </li>
+
+                <li>
+                    <a href="novapeca.php"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span></a>
+                </li>
+
+                <li>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                </li>
+                <li>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
+                </li>
+                <li>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
+                </li>
+                <!-- Fim menu lateral -->
 
             </ul>
 
@@ -56,16 +75,8 @@ require_once 'lib/Colaboradores.php';
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html">
-                <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
-                </div>
-            </form>
         </div>
             <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
-                </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
@@ -165,7 +176,7 @@ require_once 'lib/Colaboradores.php';
 
                 <li>
                     <a href="login.html">
-                        <i class="fa fa-sign-out"></i> Log out
+                        <i class="fa fa-sign-out"></i> Sair
                     </a>
                 </li>
             </ul>
@@ -174,17 +185,15 @@ require_once 'lib/Colaboradores.php';
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-9">
-                    <h2>Contacts</h2>
+                    <h2>Colaboradores</h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            App Views
+                            Colaboradores
                         </li>
-                        <li class="active">
-                            <strong>Contacts</strong>
-                        </li>
+
                     </ol>
                 </div>
             </div>
@@ -199,7 +208,7 @@ require_once 'lib/Colaboradores.php';
                   <a href="profile.html">
                   <div class="col-sm-4">
                       <div class="text-center">
-                          <img alt="image" class="img-circle m-t-xs img-responsive" src="">
+                          <img alt="image" class="img-circle m-t-xs img-responsive" src="img/<?php echo $value->col_img ?>">
                           <div class="m-t-xs font-bold"><?php echo $value->fun_funcao ?></div>
                       </div>
                   </div>

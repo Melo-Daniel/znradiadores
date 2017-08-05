@@ -44,7 +44,7 @@ function inserirProduto(){
 </script>
 </head>
 
-<body>
+<body class="mini-navbar">
 
     <div id="wrapper">
 
@@ -72,33 +72,21 @@ function inserirProduto(){
                 </li>
                 <!-- Inicio menu lateral -->
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Geral</span></a>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Nova Peça</a></li>
-                        <li><a href="index.html">Minhas Peças</a></li>
-                    </ul>
+                    <a href="novapeca.php"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span></a>
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Serviço</a></li>
-                        <li><a href="index.html">Tabela de Serviços</a></li>
-                    </ul>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Cliente</a></li>
-                        <li><a href="index.html">Meus Clientes</a></li>
-                    </ul>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -247,7 +235,7 @@ function inserirProduto(){
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
+                    <div class="ibox float-e-margins collapsed">
                         <div class="ibox-title">
                             <h5>Cadastre uma nova peça</h5>
                             <div class="ibox-tools">

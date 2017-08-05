@@ -9,7 +9,7 @@ require_once 'lib/Cliente.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Basic Form</title>
+    <title>ZN Radiadores | Clientes</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -42,7 +42,7 @@ function inserirCliente(){
 </script>
 </head>
 
-<body>
+<body class="mini-navbar">
 
     <div id="wrapper">
 
@@ -70,7 +70,7 @@ function inserirCliente(){
                 </li>
                 <!-- Inicio menu lateral -->
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Geral</span></a>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
                 </li>
 
                 <li>
@@ -78,17 +78,13 @@ function inserirCliente(){
                 </li>
 
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="index.html">Novo Serviço</a></li>
-                        <li><a href="index.html">Tabela de Serviços</a></li>
-                    </ul>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
-                    <a href="cliente.php"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span></a>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="colaboradores.php"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -101,11 +97,6 @@ function inserirCliente(){
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html">
-                <div class="form-group">
-                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
-                </div>
-            </form>
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
@@ -237,7 +228,7 @@ function inserirCliente(){
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
+                    <div class="ibox float-e-margins collapsed">
                         <div class="ibox-title">
                             <h5>Cadastre um novo cliente</h5>
                             <div class="ibox-tools">
