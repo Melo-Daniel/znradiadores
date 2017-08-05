@@ -69,10 +69,30 @@ class Servicos extends DB{
     return $stm->fetchAll();
   }
   public function listarFaturamentoDoDia(){
-    $sql = "select sum(ser_valor) from tb_servicos where ser_sts_id = 3 and ser_data = current_date();";
+    $sql = "select sum(ser_valor) as valor from tb_servicos where ser_sts_id = 3 and ser_data = current_date();";
     $stm = DB::prepare($sql);
     $stm->execute();
-    return $stm->fetchAll();
+    return $stm->fetch();
+  }
+  public function listarFaturamentoDoDiaDinheiro(){
+    $sql = "select sum(ser_valor) as valor from tb_servicos
+              join tb_pagamentos on (ser_id = pag_ser_id)
+              where ser_sts_id = 3 and
+              ser_data = current_date() and
+              pag_fpg_id = 2;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+  public function listarFaturamentoDoDiaCartao(){
+    $sql = "select sum(ser_valor) as valor from tb_servicos
+              join tb_pagamentos on (ser_id = pag_ser_id)
+              where ser_sts_id = 3 and
+              ser_data = current_date() and
+              pag_fpg_id = 3;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
   }
 }
  ?>

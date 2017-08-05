@@ -205,7 +205,7 @@ require_once 'lib/Colaboradores.php';
           ?>
           <div class="col-lg-4">
               <div class="contact-box">
-                  <a href="profile.html">
+                  <a href="ponto.php">
                   <div class="col-sm-4">
                       <div class="text-center">
                           <img alt="image" class="img-circle m-t-xs img-responsive" src="img/<?php echo $value->col_img ?>">

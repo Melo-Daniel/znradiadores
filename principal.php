@@ -1,4 +1,7 @@
-
+<?php
+require_once 'lib/Servico.php';
+$s = new Servicos();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -235,14 +238,29 @@
                     <div class="col-md-3">
                         <div class="statistic-box">
                         <h1>
-                            Hoje: R$5.000,00
+                            Hoje: <?php $valor = $s->listarFaturamentoDoDia();
+                                        if($valor->valor == null){
+                                          echo "R$0,00";
+                                        }else{
+                                          echo "R$".$valor->valor;
+                                        } ?>
                         </h1>
                         <br>
                         <dl class="dl-horizontal m-t-md small">
                             <dt>Dinheiro</dt>
-                            <dd>R$3.000,00</dd><br>
+                            <dd><?php $valor = $s->listarFaturamentoDoDiaDinheiro();
+                                        if($valor->valor == null){
+                                          echo "R$0,00";
+                                        }else{
+                                          echo "R$".$valor->valor;
+                                        } ?></dd><br>
                             <dt>Cartão</dt>
-                            <dd>R$2.000,00</dd><br>
+                            <dd><?php $valor = $s->listarFaturamentoDoDiaCartao();
+                                        if($valor->valor == null){
+                                          echo "R$0,00";
+                                        }else{
+                                          echo "R$".$valor->valor;
+                                        } ?></dd><br>
                         </dl>
                         </div>
                     </div>

@@ -27,16 +27,16 @@ function finalizarPagamento(){
   var pagamento = -1;
   dinheiro = document.getElementById('dinheiro');
   cartao = document.getElementById('cartao');
-  cartao = document.getElementById('transferencia');
+  transferencia = document.getElementById('transferencia');
 
   //captura radio selecionado
 
   if(dinheiro.checked == true){
-    pagamento = dinheiro.value;
+    pagamento = 2;
   }else if (cartao.checked == true) {
-    pagamento = cartao.value;
+    pagamento = 4;
   }else if (transferencia.checked == true) {
-    pagamento = transferencia.value;
+    pagamento = 5;
   }
 
 
@@ -47,15 +47,15 @@ function finalizarPagamento(){
   var g3 = document.getElementById('g3');
 
   //captura radio selecionado
-
+  alert(pagamento);
   if(g0.checked == true){
-    garantia = g0.value;
+    garantia = 1;
   }else if(g1.checked == true){
-    garantia = g1.value;
+    garantia = 2;
   }else if(g2.checked == true){
-    garantia = g2.value;
+    garantia = 3;
   }else if(g3.checked == true){
-    garantia = g3.value;
+    garantia = 4;
   }
 
   var servico = document.getElementById('servico').value;
@@ -69,7 +69,7 @@ function finalizarPagamento(){
     valor:200
   },function(data,status){
     if(data=='ok'){
-      location.reload();
+      location.href = "principal.php";
     }else{
       alert(data);
     }
@@ -78,7 +78,7 @@ function finalizarPagamento(){
 </script>
 </head>
 
-<body>
+<body class="mini-navbar">
 
 <div id="wrapper">
     <input type="hidden" name="servico" id="servico" value="<?php echo $servico?>">
@@ -87,11 +87,11 @@ function finalizarPagamento(){
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="img/profile_small.jpg" />
+                            <img alt="image" class="img-circle" src="img/daniel-small.jpg" />
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Daniel Melo</strong>
+                            </span> <span class="text-muted text-xs block">Desenvolvedor <b class="caret"></b></span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a href="profile.html">Profile</a></li>
                             <li><a href="contacts.html">Contacts</a></li>
@@ -104,7 +104,25 @@ function finalizarPagamento(){
                         ZN
                     </div>
                 </li>
+                <!-- Inicio menu lateral -->
+                <li>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
+                </li>
 
+                <li>
+                    <a href="novapeca.php"><i class="fa fa-th-large"></i> <span class="nav-label">Estoque</span></a>
+                </li>
+
+                <li>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                </li>
+                <li>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
+                </li>
+                <li>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
+                </li>
+                <!-- Fim menu lateral -->
             </ul>
 
         </div>
@@ -116,7 +134,7 @@ function finalizarPagamento(){
                 <div class="navbar-header">
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
                     <form role="search" class="navbar-form-custom" action="search_results.html">
-                      
+
                     </form>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
@@ -338,8 +356,8 @@ function finalizarPagamento(){
                                         <dd>
                                           <div class="col-sm-10"><label class="radio-inline">
                                                       <input type="radio" value="2" id="dinheiro" name="fg" checked> Dinheiro </label> <label class="radio-inline">
-                                                      <input type="radio" value="3" id="cartao" name="fg"> Cartão </label> <label class="radio-inline">
-                                                      <input type="radio" value="4" id="transferencia" name="fg"> Transferencia </label>
+                                                      <input type="radio" value="4" id="cartao" name="fg"> Cartão </label> <label class="radio-inline">
+                                                      <input type="radio" value="5" id="transferencia" name="fg"> Transferencia </label>
 									                        </div>
                                         </dd>
                                         <br>
