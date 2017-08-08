@@ -9,8 +9,8 @@ switch ($op) {
 
     $s->setCliente($_POST['cliente']);
     $s->setColaborador($_POST['mecanico']);
-
-    if($s->iniciarServico($s)){
+    $status = $_POST['status'];
+    if($s->iniciarServico($s,$status)){
       echo 'ok';
     }else{
       echo 'erro';

@@ -35,5 +35,11 @@ class ProdutoServicos extends DB{
     $stm->execute();
     return $stm->fetchAll();
   }
+
+  public function cancelarServico($s){
+    $sql = "update tb_servicos set ser_sts_id = 4 where ser_id = $s";
+    $stm = DB::prepare($sql);
+    return $stm->execute();
+  }
 }
 ?>

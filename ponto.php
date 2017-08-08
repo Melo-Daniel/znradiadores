@@ -1,5 +1,21 @@
 <?php
-
+require_once 'lib\Ponto.php';
+require_once 'lib\Colaboradores.php';
+$colaborador = $_GET['ids'];
+$c = new Colaboradores();
+$cl = $c->listarColaborador($colaborador);
+if(isset($_POST['ponto'])){
+  $p = new Pontos();
+  if($p->autenticarPonto($colaborador,$_POST['senha']) > 0){
+    if($p->baterPonto($colaborador)){
+      header("Location:colaboradores.php");
+    }else{
+      echo "erro";
+    }
+  }else{
+    echo "Usuario não encontrado!";
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,15 +46,15 @@
             </div>
             <h3>Ponto online</h3>
 
-            <form class="m-t" role="form" action="profile_2.html">
+            <form class="m-t" role="form" action="ponto.php?ids=<?php echo $colaborador?>" method="post">
                 <div class="form-group">
-                    <p class="form-control-static">Daniel Freitas de Melo</p>
+                    <p class="form-control-static"><?php echo $cl->col_nome?></p>
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Senha" required="">
+                    <input type="password" class="form-control" name="senha" placeholder="Senha" required="">
                 </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">Bater Ponto</button>
-
+                <button type="submit" name="ponto" class="btn btn-primary block full-width m-b">Bater Ponto</button>
+            </form>
         </div>
     </div>
 

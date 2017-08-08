@@ -27,12 +27,16 @@ function iniciarServico(){
 
   var cliente = document.getElementById('cliente').value;
   var mecanico = document.getElementById('mecanico').value;
-
+  var status = 2;
+  if(mecanico == 12){
+    status = 1;
+  }
   $.post("actions/ServicosAC.php",
   {
       op:1,
       cliente:cliente,
-      mecanico:mecanico
+      mecanico:mecanico,
+      status:status
   },
   function(data,status){
     if(data == 'ok'){
@@ -275,6 +279,7 @@ function iniciarServico(){
                                     <div class="col-sm-10">
                                       <select class="form-control" name="mecanico" id="mecanico">
                                         <option value="0">Selecione um mecânico</option>
+                                        <option value="12">Colocar em espera</option>
                                         <?php
                                         $c = new Colaboradores();
                                           foreach ($c->listarColaboradores() as $key => $value) {
@@ -346,7 +351,18 @@ function iniciarServico(){
                             <td><?php echo $value->ser_valor ?></td>
                             <td class="center"><?php echo $value->col_nome ?></td>
                             <td class="center"><?php echo $value->sts_status ?></td>
-                            <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                              if($value->ser_sts_id == 3){
+                              ?>
+                                <td style="text-align:center"><a href="servicoConcluido.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }else{
+                              ?>
+                                <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }
+                             ?>
+
                         </tr>
                         <?php
                         }

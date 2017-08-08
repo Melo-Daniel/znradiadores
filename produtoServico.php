@@ -28,16 +28,39 @@ $servico = $_GET['id'];
 
 function adicionarProduto(id){
   var servico = document.getElementById('idservico').value;
+  var qtd = document.getElementById('qtd').value;
+  var prod = document.getElementById('prod').value;
   $.post("actions/ProdutoServicoAC.php",
   {
     op:1,
     servico:servico,
-    produto:id,
-    qtd:1
+    produto:prod,
+    qtd:qtd
   },
   function(data,status){
     if(data == 'ok'){
       location.reload();
+    }else{
+      alert(data);
+    }
+  });
+}
+function designarProduto(id){
+  var produto = document.getElementById('prod').value = id;
+}
+function teste(){
+  alert('cancelar');
+}
+function cancelarServico(){
+  var servico = document.getElementById('idservico').value;
+  $.post("actions/ProdutoServicoAC.php",
+  {
+    op:3,
+    servico:servico
+  },
+  function(data,status){
+    if(data == 'ok'){
+      location.href="servico.php";
     }else{
       alert(data);
     }
@@ -65,7 +88,7 @@ function removerProduto(produto){
 
 </head>
 
-<body>
+<body class="mini-navbar">
     <input type="hidden" name="idservico" id="idservico" value="<?php echo $servico?>">
     <div id="wrapper">
 
@@ -93,7 +116,7 @@ function removerProduto(produto){
                 </li>
                 <!-- Inicio menu lateral -->
                 <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Geral</span></a>
+                    <a href="principal.php"><i class="fa fa-line-chart"></i> <span class="nav-label">Geral</span></a>
                 </li>
 
                 <li>
@@ -101,13 +124,13 @@ function removerProduto(produto){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-th-large"></i> <span class="nav-label">Serviços</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
-                    <a href="cliente.php"><i class="fa fa-th-large"></i> <span class="nav-label">Clientes</span></a>
+                    <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
                 </li>
                 <li>
-                    <a href="colaboradores.php"><i class="fa fa-th-large"></i> <span class="nav-label">Colaboradores</span></a>
+                    <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
                 </li>
                 <!-- Fim menu lateral -->
             </ul>
@@ -120,11 +143,7 @@ function removerProduto(produto){
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html">
-                <div class="form-group">
-                    <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
-                </div>
-            </form>
+
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
@@ -236,9 +255,13 @@ function removerProduto(produto){
 
         </nav>
         </div>
+        <?php
+          $ser = new Servicos();
+          $tmpSer = $ser->listarServico($servico);
+         ?>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Detalhes do Serviço</h2>
+                    <h2>Detalhes do Serviço - <?php echo $tmpSer->cli_nome ?></h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
@@ -256,7 +279,48 @@ function removerProduto(produto){
                 </div>
             </div>
         <div class="wrapper wrapper-content animated fadeInRight">
-
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="ibox float-e-margins collapsed">
+                      <div class="ibox-title">
+                          <h5>Detalhes</h5>
+                          <div class="ibox-tools">
+                              <a class="collapse-link">
+                                  <i class="fa fa-chevron-up"></i>
+                              </a>
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                  <i class="fa fa-wrench"></i>
+                              </a>
+                              <ul class="dropdown-menu dropdown-user">
+                                  <li><a href="#">Config option 1</a>
+                                  </li>
+                                  <li><a href="#">Config option 2</a>
+                                  </li>
+                              </ul>
+                              <a class="close-link">
+                                  <i class="fa fa-times"></i>
+                              </a>
+                          </div>
+                      </div>
+                      <div class="ibox-content">
+                        <dl class="dl-horizontal m-t-md">
+                            <dt>Cliente</dt>
+                            <dd><?php echo $tmpSer->cli_nome ?></dd>
+                            <dt>Carro</dt>
+                            <dd><?php echo $tmpSer->car_descricao ?></dd>
+                            <dt>Telefone</dt>
+                            <dd><?php echo $tmpSer->cli_telefone ?></dd>
+                            <dt>Data</dt>
+                            <dd><?php echo date_format(date_create($tmpSer->ser_data),"d/m/Y"); ?></dd>
+                            <dt>Mecânico</dt>
+                            <dd><?php echo $tmpSer->col_nome?></dd>
+                            <dt>Total</dt>
+                            <dd><?php echo $tmpSer->ser_valor ?></dd>
+                        </dl>
+                      </div>
+                  </div>
+              </div>
+          </div>
             <div class="row">
                 <div class="col-lg-6">
                 <div class="ibox float-e-margins">
@@ -299,7 +363,7 @@ function removerProduto(produto){
                         <tr class="gradeX">
                             <td><?php echo $value->pro_nome ?></td>
                             <td><?php echo $value->pro_valor ?></td>
-                            <td style="text-align:center"><a href="#" style="text-align:center;color:#33cc33" onclick="adicionarProduto(<?php echo $value->pro_id ?>)"><i class="fa fa-plus"></i></a></td>
+                            <td style="text-align:center"><a href="#" style="text-align:center;color:#33cc33"  data-toggle="modal" data-target="#myModal" onclick="designarProduto(<?php echo $value->pro_id ?>)"><i class="fa fa-plus"></i></a></td>
                         </tr>
                         <?php
                         }
@@ -318,6 +382,35 @@ function removerProduto(produto){
 
                     </div>
                 </div>
+            </div>
+
+            <!-- Trigger the modal with a button -->
+            <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+              <div class="modal-dialog modal-sm">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Número de Peças</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form method="get" class="form-horizontal">
+                        <div class="form-group"><label class="control-label">Quantidade</label>
+                              <input type="hidden" name="prod" id="prod" value="">
+                              <input type="text" class="form-control" name="qtd" id="qtd" value="1">
+
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="adicionarProduto()">Adicionar</button>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
                 <div class="col-lg-6">
@@ -349,6 +442,7 @@ function removerProduto(produto){
                       <thead>
                       <tr>
                           <th>PEÇA</th>
+                          <th>QTD</th>
                           <th>VALOR</th>
                           <th></th>
                       </tr>
@@ -360,7 +454,8 @@ function removerProduto(produto){
                           ?>
                           <tr class="gradeX">
                               <td><?php echo $value->pro_nome ?></td>
-                              <td><?php echo $value->pro_valor ?></td>
+                              <td><?php echo $value->prs_qtd ?></td>
+                              <td><?php echo $value->prs_valor_total ?></td>
                               <td style="text-align:center;color:#ffe344"><a href="#" style="text-align:center;color:#ff0000" onclick="removerProduto(<?php echo $value->pro_id ?>)"><i class="fa fa-times"></i></a></td>
                           </tr>
                           <?php
@@ -371,6 +466,7 @@ function removerProduto(produto){
                       <tfoot>
                       <tr>
                         <th>PEÇA</th>
+                        <th>QTD</th>
                         <th>VALOR</th>
                         <th></th>
                       </tr>
@@ -384,9 +480,9 @@ function removerProduto(produto){
             </div>
             <div class="footer">
                 <div class="pull-right">
-                  <button class="btn btn-white" type="reset">Cancelar</button>
+                  <a href="#" class="btn btn-danger" onclick="cancelarServico()">Cancelar Serviço</button>
                   <!--<button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Pagamento</button>-->
-                  <a href="pagamento.php?id=<?php echo $servico?>" class="btn btn-primary">Pagamento</a>
+                  <a href="pagamento.php?id=<?php echo $servico?>" style="margin-left:10px" class="btn btn-primary">Pagamento</a>
                 </div>
             </div>
         </div>

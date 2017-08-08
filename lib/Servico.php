@@ -32,9 +32,9 @@ class Servicos extends DB{
     $this->garantia = $garantia;
   }
 
-  public function iniciarServico($s){
+  public function iniciarServico($s,$status){
     $sql = "INSERT INTO  tb_servicos(ser_data,ser_valor,ser_mao_de_obra,ser_sts_id,ser_fpg_id,ser_col_id,ser_cli_id,ser_gar_id) values
-            (current_date(),0,0,1,1,$s->colaborador,$s->cliente,1)";
+            (current_date(),0,0,$status,1,$s->colaborador,$s->cliente,1)";
     $stm = DB::prepare($sql);
     return $stm->execute();
   }
@@ -44,7 +44,6 @@ class Servicos extends DB{
 	         join tb_clientes on(cli_id = ser_cli_id)
            join tb_carros on (cli_id = car_cli_id)
            join tb_status_servicos on(sts_id = ser_sts_id)
-           join tb_formas_pagamentos on(fpg_id = ser_fpg_id)
            join tb_colaboradores on(col_id = ser_col_id) where ser_data = current_date()";
     $stm = DB::prepare($sql);
     $stm->execute();
@@ -55,7 +54,9 @@ class Servicos extends DB{
 	         join tb_clientes on(cli_id = ser_cli_id)
            join tb_carros on (cli_id = car_cli_id)
            join tb_status_servicos on(sts_id = ser_sts_id)
-           join tb_formas_pagamentos on(fpg_id = ser_fpg_id)
+           join tb_pagamentos on(pag_id = pag_ser_id)
+           join tb_formas_pagamentos on(fpg_id = pag_fpg_id)
+           join tb_garantias on(gar_id = ser_gar_id)
            join tb_colaboradores on(col_id = ser_col_id) where ser_id = $id";
     $stm = DB::prepare($sql);
     $stm->execute();
@@ -89,7 +90,7 @@ class Servicos extends DB{
               join tb_pagamentos on (ser_id = pag_ser_id)
               where ser_sts_id = 3 and
               ser_data = current_date() and
-              pag_fpg_id = 3;";
+              pag_fpg_id = 4;";
     $stm = DB::prepare($sql);
     $stm->execute();
     return $stm->fetch();

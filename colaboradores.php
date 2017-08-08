@@ -193,7 +193,6 @@ require_once 'lib/Colaboradores.php';
                         <li>
                             Colaboradores
                         </li>
-
                     </ol>
                 </div>
             </div>
@@ -205,7 +204,7 @@ require_once 'lib/Colaboradores.php';
           ?>
           <div class="col-lg-4">
               <div class="contact-box">
-                  <a href="ponto.php">
+                  <a href="ponto.php?ids=<?php echo $value->col_id?>">
                   <div class="col-sm-4">
                       <div class="text-center">
                           <img alt="image" class="img-circle m-t-xs img-responsive" src="img/<?php echo $value->col_img ?>">
@@ -214,7 +213,19 @@ require_once 'lib/Colaboradores.php';
                   </div>
                   <div class="col-sm-8">
                       <h3><strong><?php echo $value->col_nome ?></strong></h3>
-                      <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p>
+                      <p><i class="fa fa-map-marker"></i> <?php
+                        $col = new Colaboradores();
+                        $ponto = $col->ultimoPonto($value->col_id);
+                        if($ponto != null){
+                          $k=date_create($ponto->pon_hotatio);
+                          $d=date_format($k,'d/m/Y H:m');
+                          echo $ponto->pon_hotatio;
+
+                        }else{
+                          echo "Ultimo ponto";
+                        }
+
+                         ?></p>
                       <address>
                           <strong>Twitter, Inc.</strong><br>
                           795 Folsom Ave, Suite 600<br>

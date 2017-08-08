@@ -11,7 +11,7 @@ switch ($op) {
 
     $ps->setServico($_POST['servico']);
     $ps->setProduto($_POST['produto']);
-    $ps->setValor($produto->pro_valor);
+    $ps->setValor($produto->pro_valor * $_POST['qtd']);
     $ps->setQtd($_POST['qtd']);
     if($ps->adicionarProduto($ps)){
       echo 'ok';
@@ -27,6 +27,17 @@ switch ($op) {
         echo 'erro';
       }
       break;
+      case 3:
+        $ps = new ProdutoServicos();
+        foreach ($ps->listarProdutosAdicionados($_POST['servico']) as $key => $value) {
+          $ps->removerProduto($value->prs_pro_id,$value->prs_ser_id);
+        }
+        if($ps->cancelarServico($_POST['servico'])){
+          echo 'ok';
+        }else{
+          echo 'erro';
+        }
+        break;
   default:
     # code...
     break;
