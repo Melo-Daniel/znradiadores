@@ -1,11 +1,16 @@
 <?php
 require_once 'lib/ProdutoServico.php';
 require_once 'lib/Servico.php';
+require_once 'lib/Colaboradores.php';
+
 $servico = $_GET['id'];
-if (isset($_POST['adicionar'])) {
+if(isset($_POST['iniciar'])){
   $s = new Servicos();
-  $s->atualizarMdoValor($_POST['mdo'],$_POST['valor']+$_POST['mdo'],$servico);
+  if($s->iniciarServicoEmEspera($_POST['mecanico'],$servico)){
+    header("Location:servico.php");
+  }
 }
+
  ?>
 <!DOCTYPE html>
 <html>
@@ -25,60 +30,6 @@ if (isset($_POST['adicionar'])) {
 
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
-<script type="text/javascript">
-function finalizarPagamento(){
-  var pagamento = -1;
-  dinheiro = document.getElementById('dinheiro');
-  cartao = document.getElementById('cartao');
-  transferencia = document.getElementById('transferencia');
-
-  //captura radio selecionado
-
-  if(dinheiro.checked == true){
-    pagamento = 2;
-  }else if (cartao.checked == true) {
-    pagamento = 4;
-  }else if (transferencia.checked == true) {
-    pagamento = 5;
-  }
-
-
-  var garantia = -1;
-  var g0 = document.getElementById('g0');
-  var g1 = document.getElementById('g1');
-  var g2 = document.getElementById('g2');
-  var g3 = document.getElementById('g3');
-
-  //captura radio selecionado
-  if(g0.checked == true){
-    garantia = 1;
-  }else if(g1.checked == true){
-    garantia = 2;
-  }else if(g2.checked == true){
-    garantia = 3;
-  }else if(g3.checked == true){
-    garantia = 4;
-  }
-
-  var servico = document.getElementById('servico').value;
-
-  $.post("actions/PagamentoAC.php",
-  {
-    op:1,
-    pagamento:pagamento,
-    garantia:garantia,
-    servico:servico,
-    valor:200
-  },function(data,status){
-    if(data=='ok'){
-      location.href = "principal.php";
-    }else{
-      alert(data);
-    }
-  });
-}
-</script>
 </head>
 
 <body class="mini-navbar">
@@ -259,7 +210,7 @@ function finalizarPagamento(){
                         <a>Serviço</a>
                     </li>
                     <li class="active">
-                        <strong>Pagamento</strong>
+                        <strong>Serviço em espera</strong>
                     </li>
                 </ol>
             </div>
@@ -270,127 +221,37 @@ function finalizarPagamento(){
 
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
-              <?php
-                $s = new Servicos();
-                $ser = $s->listarServico($servico);
-               ?>
                 <div class="col-lg-12">
 
                     <div class="ibox product-detail">
                         <div class="ibox-content">
 
                             <div class="row">
-                                <div class="col-md-5">
-                                  <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Nota de Serviço</h5>
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-wrench"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user">
-                                    <li><a href="#">Config option 1</a>
-                                    </li>
-                                    <li><a href="#">Config option 2</a>
-                                    </li>
-                                </ul>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="ibox-content">
-
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>PRODUTO</th>
-                                    <th>QTD</th>
-                                    <th>VALOR</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                  <?php
-                                  $ps = new ProdutoServicos();
-                                  foreach ($ps->listarProdutosAdicionados($servico) as $key => $value) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $value->pro_nome ?></td>
-                                        <td><?php echo $value->prs_qtd ?></td>
-                                        <td><?php echo $value->prs_valor_total ?></td>
-                                    </tr>
-                                  <?php
-                                    }
-                                  ?>
-
-                                </tbody>
-                            </table>
-                            <hr>
-                            <form class="form-horizontal" action="pagamento.php?id=<?php echo $servico?>" method="post">
-                                <div class="form-group"><label class="col-sm-4 control-label">Mão de Obra</label>
-                                    <div class="col-sm-8"><input type="text" name="mdo" id="mdo" class="form-control" value="<?php echo $ser->ser_mao_de_obra ?>"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-4 control-label">Valor Pago</label>
-                                    <div class="col-sm-8"><input type="text" name="valor" id="valor" class="form-control" value="<?php echo $ser->ser_valor ?>"></div>
-                                </div>
-                                <div class="hr-line-dashed"></div>
-                                <div class="form-group">
-                                  <button type="submit" class="btn btn-primary" name="adicionar" style="float:right; margin-left:10px">Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                                </div>
-                                <div class="col-md-7">
-
-                                    <h2 class="font-bold m-b-xs">
-                                        <?php echo $ser->cli_nome ?>
-                                    </h2>
-                                    <small><?php echo $ser->car_descricao ?></small>
-                                    <hr>
-                                    <div>
-                                        <button class="btn btn-primary pull-right" onclick="finalizarPagamento()"> Finalizar Pagamento</button>
-                                        <h1 class="product-main-price">R$<?php echo $ser->ser_valor ?></h1>
-                                    </div>
-                                    <hr>
-
-                                    <dl class="dl-horizontal m-t-md small">
-                                        <dt>ID</dt>
-                                        <dd><?php echo $servico ?></dd><br>
-                                        <dt>Mecânico</dt>
-                                        <dd><?php echo $ser->col_nome ?></dd><br>
-                                        <dt>Data</dt>
-                                        <dd><?php
-                                          $date=date_create($ser->ser_data);
-                                          echo date_format($date,"d/m/Y");
-                                         ?></dd><br>
-                                        <dt>Forma de Pagamento</dt>
-                                        <dd>
-                                          <div class="col-sm-10"><label class="radio-inline">
-                                                      <input type="radio" value="2" id="dinheiro" name="fg" checked> Dinheiro </label> <label class="radio-inline">
-                                                      <input type="radio" value="4" id="cartao" name="fg"> Cartão </label> <label class="radio-inline">
-                                                      <input type="radio" value="5" id="transferencia" name="fg"> Transferencia </label>
-									                        </div>
-                                        </dd>
-                                        <br>
-                                        <dt>Garantia</dt>
-                                        <dd>
-                                          <div class="col-sm-10"><label class="radio-inline">
-										                                  <input type="radio" value="1" id="g0" name="fga"> 0 </label> <label class="radio-inline">
-                                                      <input type="radio" value="2" id="g1" name="fga" checked> 3 </label> <label class="radio-inline">
-                                                      <input type="radio" value="3" id="g2" name="fga"> 6 </label> <label class="radio-inline">
-                                                      <input type="radio" value="4" id="g3" name="fga"> 12 </label>
-									                        </div>
-                                        </dd><br>
-                                        <dt></dt>
-                                        <dd>Periodo de garantia em meses.</dd>
-                                    </dl>
-
-
+                                <div class="col-md-12">
+                                  <h1 style="text-align:center">Serviço em Espera</h1>
+                                  <form method="post" class="form-horizontal" action="servicoEspera.php?id=<?php echo $servico?>">
+                                      <div class="form-group"><label class="col-sm-2 control-label">Mecânico</label>
+                                          <div class="col-sm-10">
+                                            <select class="form-control" name="mecanico" id="mecanico">
+                                              
+                                              <?php
+                                              $c = new Colaboradores();
+                                                foreach ($c->listarColaboradores() as $key => $value) {
+                                                  ?>
+                                                    <option value="<?php echo $value->col_id ?>"><?php echo $value->col_nome ?></option>
+                                                  <?php
+                                                }
+                                               ?>
+                                            </select>
+                                          </div>
+                                      </div>
+                                      <div class="hr-line-dashed"></div>
+                                      <div class="form-group">
+                                        <div class="pull-right">
+                                          <button class="btn btn-primary" name="iniciar" type="submit" style="margin-left:10px">Iniciar Serviço</button>
+                                        </div>
+                                      </div>
+                                  </form>
                                 </div>
                             </div>
 
@@ -400,19 +261,7 @@ function finalizarPagamento(){
 
                 </div>
             </div>
-
-
-
-
         </div>
-        <div class="footer">
-            <div class="pull-right">
-              <button class="btn btn-primary" type="reset"><i class="fa fa-envelope-o"></i></button>
-              <!--<button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Pagamento</button>-->
-              <a href="" class="btn btn-primary"><i class="fa fa-print"></i></a>
-            </div>
-        </div>
-
     </div>
 </div>
 

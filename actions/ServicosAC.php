@@ -1,5 +1,5 @@
 <?php
-require_once '..\lib\Servico.php';
+require_once '../lib/Servico.php';
 
 $op = $_POST['op'];
 

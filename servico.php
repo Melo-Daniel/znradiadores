@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <?php
 require_once 'lib/Servico.php';
@@ -12,7 +10,7 @@ require_once 'lib/Cliente.php';
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta http-equiv="Content-Language" content="pt-br">
     <title>Serviços</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -31,20 +29,21 @@ function iniciarServico(){
   if(mecanico == 12){
     status = 1;
   }
-  $.post("actions/ServicosAC.php",
-  {
-      op:1,
-      cliente:cliente,
-      mecanico:mecanico,
-      status:status
-  },
-  function(data,status){
-    if(data == 'ok'){
-      location.reload();
-    }else{
-      alert(data);
-    }
-  });
+  if(mecanico == 0){
+    alert('Mecanico invalido! Selecione uma outra opcao.');
+  }else{
+    $.post("actions/ServicosAC.php",
+    {
+        op:1,
+        cliente:cliente,
+        mecanico:mecanico,
+        status:status
+    },
+    function(data,status){
+        location.reload();
+    });
+  }
+
 }
 
 </script>
@@ -86,7 +85,7 @@ function iniciarServico(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -275,7 +274,7 @@ function iniciarServico(){
                                       </select>
                                     </div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Mecânico</label>
+                                <div class="form-group"><label class="col-sm-2 control-label">MecÃ¢nico</label>
                                     <div class="col-sm-10">
                                       <select class="form-control" name="mecanico" id="mecanico">
                                         <option value="0">Selecione um mecânico</option>
@@ -332,6 +331,7 @@ function iniciarServico(){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>CLIENTE</th>
                         <th>CARRO</th>
                         <th>VALOR</th>
@@ -346,6 +346,7 @@ function iniciarServico(){
                         foreach ($c->listarServicos() as $key => $value) {
                         ?>
                         <tr class="gradeX">
+                            <td><?php echo $value->ser_id ?></td>
                             <td><?php echo $value->cli_nome ?></td>
                             <td><?php echo $value->car_descricao ?></td>
                             <td><?php echo $value->ser_valor ?></td>
@@ -356,6 +357,14 @@ function iniciarServico(){
                               ?>
                                 <td style="text-align:center"><a href="servicoConcluido.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
                               <?php
+                            }elseif($value->ser_sts_id == 4){
+                            ?>
+                              <td style="text-align:center"><a href="servicoCancelado.php"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                          }elseif($value->ser_sts_id == 1){
+                            ?>
+                              <td style="text-align:center"><a href="servicoEspera.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
                             }else{
                               ?>
                                 <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
@@ -371,6 +380,7 @@ function iniciarServico(){
                     </tbody>
                     <tfoot>
                     <tr>
+                      <th>ID</th>
                       <th>CLIENTE</th>
                       <th>CARRO</th>
                       <th>VALOR</th>
@@ -382,6 +392,150 @@ function iniciarServico(){
                     </table>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins collapsed">
+                    <div class="ibox-title">
+                        <h5>Todos Serviços</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CLIENTE</th>
+                        <th>CARRO</th>
+                        <th>VALOR</th>
+                        <th>MECANICO</th>
+                        <th>STATUS</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                        foreach ($c->listarTodosServicos() as $key => $value) {
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $value->ser_id ?></td>
+                            <td><?php echo $value->cli_nome ?></td>
+                            <td><?php echo $value->car_descricao ?></td>
+                            <td><?php echo $value->ser_valor ?></td>
+                            <td class="center"><?php echo $value->col_nome ?></td>
+                            <td class="center"><?php echo $value->sts_status ?></td>
+                            <?php
+                              if($value->ser_sts_id == 3){
+                              ?>
+                                <td style="text-align:center"><a href="servicoConcluido.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }elseif($value->ser_sts_id == 4){
+                            ?>
+                              <td style="text-align:center"><a href="servicoCancelado.php"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                          }elseif($value->ser_sts_id == 1){
+                            ?>
+                              <td style="text-align:center"><a href="servicoEspera.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                            }else{
+                              ?>
+                                <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }
+                             ?>
+
+                        </tr>
+                        <?php
+                        }
+                       ?>
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>CLIENTE</th>
+                      <th>CARRO</th>
+                      <th>VALOR</th>
+                      <th>MECANICO</th>
+                      <th>STATUS</th>
+                      <th></th>
+                    </tr>
+                    </tfoot>
+                    </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins collapsed">
+                    <div class="ibox-title">
+                        <h5>Inicie um novo serviço</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+                            <div class="form-group"><label class="col-sm-2 control-label">Mecânico</label>
+                                <div class="col-sm-10">
+                                  <select class="form-control" name="mecanico" id="mecanico">
+                                    <option value="0">Selecione um mecânico</option>
+                                    <option value="12">Colocar em espera</option>
+                                    <?php
+                                    $c = new Colaboradores();
+                                      foreach ($c->listarColaboradores() as $key => $value) {
+                                        ?>
+                                          <option value="<?php echo $value->col_id ?>"><?php echo $value->col_nome ?></option>
+                                        <?php
+                                      }
+                                     ?>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                              <div class="pull-right">
+                                <button class="btn btn-white" type="reset" >Cancelar</button>
+                                <a href="relatorioSemanal.php?id=<?php echo "15" ?>" target="_blank" class="btn btn-primary" style="margin-left:10px;margin-right:20px;">Relatório Semanal</a>
+                              </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

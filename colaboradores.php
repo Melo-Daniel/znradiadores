@@ -9,7 +9,7 @@ require_once 'lib/Colaboradores.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Contacts</title>
+    <title>ZN Radiadores | Colaboradores</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -207,7 +207,7 @@ require_once 'lib/Colaboradores.php';
                   <a href="ponto.php?ids=<?php echo $value->col_id?>">
                   <div class="col-sm-4">
                       <div class="text-center">
-                          <img alt="image" class="img-circle m-t-xs img-responsive" src="img/<?php echo $value->col_img ?>">
+                          <img alt="image" class="img-circle m-t-xs img-responsive" src="img/pai.jpg">
                           <div class="m-t-xs font-bold"><?php echo $value->fun_funcao ?></div>
                       </div>
                   </div>
@@ -227,14 +227,15 @@ require_once 'lib/Colaboradores.php';
 
                          ?></p>
                       <address>
-                          <strong>Twitter, Inc.</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                          <abbr title="Phone">P:</abbr> (123) 456-7890
+                        <p>
+                          <i class="fa fa-phone"></i>
+                          <?php echo $value->col_telefone ?><br>
+                        </p>
                       </address>
                   </div>
                   <div class="clearfix"></div>
                       </a>
+                      <a href="relatorioSemanal.php?id=<?php echo $value->col_id ?>" target="_blank" class="btn btn-link">Relatório Semanal</a>
               </div>
           </div>
           <?php

@@ -1,5 +1,5 @@
 <?php
-require_once 'lib\Colaboradores.php';
+require_once 'lib/Colaboradores.php';
 session_start();
 if(isset($_POST['login'])){
 $c = new Colaboradores();

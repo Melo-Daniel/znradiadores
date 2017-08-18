@@ -1,6 +1,6 @@
 <?php
-require_once 'lib\Ponto.php';
-require_once 'lib\Colaboradores.php';
+require_once 'lib/Ponto.php';
+require_once 'lib/Colaboradores.php';
 $colaborador = $_GET['ids'];
 $c = new Colaboradores();
 $cl = $c->listarColaborador($colaborador);

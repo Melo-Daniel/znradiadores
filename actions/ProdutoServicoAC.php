@@ -1,6 +1,6 @@
 <?php
-require_once '..\lib\ProdutoServico.php';
-require_once '..\lib\Produtos.php';
+require_once '../lib/ProdutoServico.php';
+require_once '../lib/Produtos.php';
 $op = $_POST['op'];
 
 switch ($op) {

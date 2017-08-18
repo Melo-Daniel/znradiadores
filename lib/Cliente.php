@@ -22,6 +22,11 @@ class Clientes extends DB{
     $stm = DB::prepare($sql);
     return $stm->execute();
   }
+  public function atualizarCliente($c){
+    $sql = "update tb_clientes set cli_nome = '$c->nome',cli_telefone = '$c->telefone',cli_status = $c->status where cli_id = $c->id";
+    $stm = DB::prepare($sql);
+    return $stm->execute();
+  }
 
   public function listarClientes(){
     $sql = "select * from tb_clientes join tb_carros on(cli_id = car_cli_id) where cli_status = 1";

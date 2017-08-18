@@ -238,7 +238,7 @@ function finalizarPagamento(){
 
                     <li>
                         <a href="login.html">
-                            <i class="fa fa-sign-out"></i> Log out
+                            <i class="fa fa-sign-out"></i> Sair
                         </a>
                     </li>
                 </ul>
@@ -367,16 +367,12 @@ function finalizarPagamento(){
 
                 </div>
             </div>
-
-
-
-
         </div>
         <div class="footer">
             <div class="pull-right">
               <button class="btn btn-primary" type="reset"><i class="fa fa-envelope-o"></i></button>
               <!--<button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Pagamento</button>-->
-              <a href="nota.php?id=<?php echo $servico?>" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i></a>
+              <a href="notaEstilizada.php?id=<?php echo $servico?>" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i></a>
             </div>
         </div>
 

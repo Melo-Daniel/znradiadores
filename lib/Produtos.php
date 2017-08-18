@@ -36,6 +36,19 @@ class Produtos extends DB{
       return $stm->execute();
   }
 
+  public function atualizarProduto($p){
+      $sql = "UPDATE tb_produtos set
+              pro_nome = '$p->nome',
+              pro_codigo = '$p->codigo',
+              pro_valor = $p->valor,
+              pro_qtd = $p->qtd,
+              pro_aplicacao = '$p->aplicacao',
+              pro_img = '$p->img',
+              pro_status = $p->status where pro_id = $p->id" ;
+      $stm = DB::prepare($sql);
+      return $stm->execute();
+  }
+
   public function listarProdutos(){
     $sql = "select * from tb_produtos where pro_status = 1";
     $stm = DB::prepare($sql);

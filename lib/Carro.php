@@ -25,5 +25,13 @@ class Carros extends DB{
     $stm = DB::prepare($sql);
     return $stm->execute();
   }
+  public function atualizarCarro($c){
+    $sql = "update tb_carros set car_descricao = '$c->descricao',
+                                 car_placa = '$c->placa',
+                                 car_status = $c->status,
+                                 car_cli_id = $c->cliente where car_id = $c->id";
+    $stm = DB::prepare($sql);
+    return $stm->execute();
+  }
 }
  ?>

@@ -33,6 +33,57 @@ $s = new Servicos();
 
 <body  class="mini-navbar">
     <div id="wrapper">
+        <?php
+        //Geral
+          $retifica = $s->numeroServicosPorSetor(1);
+          $geral = $s->numeroServicosPorSetor(2);
+          $radiador = $s->numeroServicosPorSetor(3);
+          $atendente = $s->numeroServicosPorSetor(4);
+
+          $numerototal = $s->numeroServicosTotal();
+          //Hoje
+          $retificahj = $s->numeroServicosPorSetorHoje(1);
+          $geralhj = $s->numeroServicosPorSetorHoje(2);
+          $radiadorhj = $s->numeroServicosPorSetorHoje(3);
+          $atendentehj = $s->numeroServicosPorSetorHoje(4);
+
+          $faturamentoJaneiro = $s->faturamentoMensalGrafico(1);
+          $faturamentoFevereiro = $s->faturamentoMensalGrafico(2);
+          $faturamentoMarco = $s->faturamentoMensalGrafico(3);
+          $faturamentoAbril = $s->faturamentoMensalGrafico(4);
+          $faturamentoMaio = $s->faturamentoMensalGrafico(5);
+          $faturamentoJunho = $s->faturamentoMensalGrafico(6);
+          $faturamentoJulho = $s->faturamentoMensalGrafico(7);
+          $faturamentoAgosto = $s->faturamentoMensalGrafico(8);
+          $faturamentoSetembro = $s->faturamentoMensalGrafico(9);
+          $faturamentoOutubro = $s->faturamentoMensalGrafico(10);
+          $faturamentoNovembro = $s->faturamentoMensalGrafico(11);
+          $faturamentoDezembro = $s->faturamentoMensalGrafico(12);
+        ?>
+
+        <input type="hidden" name="retifica" id="retifica" value="<?php echo $retifica->numero ?>">
+        <input type="hidden" name="geral" id="geral" value="<?php echo $geral->numero ?>">
+        <input type="hidden" name="atendente" id="atendente" value="<?php echo $atendente->numero ?>">
+        <input type="hidden" name="radiador" id="radiador" value="<?php echo $radiador->numero ?>">
+
+        <input type="hidden" name="retificahj" id="retificahj" value="<?php echo $retificahj->numero ?>">
+        <input type="hidden" name="geralhj" id="geralhj" value="<?php echo $geralhj->numero ?>">
+        <input type="hidden" name="atendentehj" id="atendentehj" value="<?php echo $atendentehj->numero ?>">
+        <input type="hidden" name="radiadorhj" id="radiadorhj" value="<?php echo $radiadorhj->numero ?>">
+
+        <input type="hidden" name="faturamento1" id="faturamento1" value="<?php echo $faturamentoJaneiro->faturamento ?>">
+        <input type="hidden" name="faturamento2" id="faturamento2" value="<?php echo $faturamentoFevereiro->faturamento ?>">
+        <input type="hidden" name="faturamento3" id="faturamento3" value="<?php echo $faturamentoMarco->faturamento ?>">
+        <input type="hidden" name="faturamento4" id="faturamento4" value="<?php echo $faturamentoAbril->faturamento ?>">
+        <input type="hidden" name="faturamento5" id="faturamento5" value="<?php echo $faturamentoMaio->faturamento ?>">
+        <input type="hidden" name="faturamento6" id="faturamento6" value="<?php echo $faturamentoJunho->faturamento ?>">
+        <input type="hidden" name="faturamento7" id="faturamento7" value="<?php echo $faturamentoJulho->faturamento ?>">
+        <input type="hidden" name="faturamento8" id="faturamento8" value="<?php echo $faturamentoAgosto->faturamento ?>">
+        <input type="hidden" name="faturamento9" id="faturamento9" value="<?php echo $faturamentoSetembro->faturamento ?>">
+        <input type="hidden" name="faturamento10" id="faturamento10" value="<?php echo $faturamentoOutubro->faturamento ?>">
+        <input type="hidden" name="faturamento11" id="faturamento11" value="<?php echo $faturamentoNovembro->faturamento ?>">
+        <input type="hidden" name="faturamento12" id="faturamento12" value="<?php echo $faturamentoDezembro->faturamento ?>">
+
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">
@@ -203,17 +254,17 @@ $s = new Servicos();
                         <div class="row text-left">
                             <div class="col-xs-4">
                                 <div class=" m-l-md">
-                                <span class="h4 font-bold m-t block">$ 406,100</span>
-                                <small class="text-muted m-b block">Rendimento Mensal</small>
+                                <span class="h4 font-bold m-t block">R$<?php $fa = $s->faturamentoAnual(); echo $fa->faturamento; ?></span>
+                                <small class="text-muted m-b block">Faturamento Anual</small>
                                 </div>
                             </div>
                             <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 150,401</span>
-                                <small class="text-muted m-b block">Rendimento Semanal</small>
+                                <span class="h4 font-bold m-t block">R$<?php $fm = $s->faturamentoMensal(); echo $fm->faturamento; ?></span>
+                                <small class="text-muted m-b block">Faturamento Mensal</small>
                             </div>
                             <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 16,822</span>
-                                <small class="text-muted m-b block">Rendimento Diário</small>
+                                <span class="h4 font-bold m-t block">R$<?php $fs = $s->faturamentoSemanal(); echo $fs->faturamento; ?></span>
+                                <small class="text-muted m-b block">Faturamento Semanal</small>
                             </div>
 
                         </div>
@@ -229,11 +280,11 @@ $s = new Servicos();
                             <div class="row text-center">
                                 <div class="col-lg-6">
                                     <canvas id="doughnutChart2" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Setores</h5>
+                                    <h5 >Setores Geral</h5>
                                 </div>
                                 <div class="col-lg-6">
                                     <canvas id="doughnutChart" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Setores</h5>
+                                    <h5 >Setores Hoje</h5>
                                 </div>
                             </div>
 
@@ -265,6 +316,8 @@ $s = new Servicos();
                                         }else{
                                           echo "R$".$valor->valor;
                                         } ?></dd><br>
+                            <dt>Serviços</dt>
+                            <dd><?php echo $numerototal->numero ?></dd><br>
                         </dl>
                         </div>
                     </div>
@@ -321,15 +374,27 @@ $s = new Servicos();
 
     <script>
         $(document).ready(function() {
+            var f1 = document.getElementById('faturamento1').value;
+            var f2 = document.getElementById('faturamento2').value;
+            var f3 = document.getElementById('faturamento3').value;
+            var f4 = document.getElementById('faturamento4').value;
+            var f5 = document.getElementById('faturamento5').value;
+            var f6 = document.getElementById('faturamento6').value;
+            var f7 = document.getElementById('faturamento7').value;
+            var f8 = document.getElementById('faturamento8').value;
+            var f9 = document.getElementById('faturamento9').value;
+            var f10 = document.getElementById('faturamento10').value;
+            var f11 = document.getElementById('faturamento11').value;
+            var f12 = document.getElementById('faturamento12').value;
 
             var data1 = [
-                [0,4],[1,8],[2,5],[3,10],[4,4],[5,16],[6,5],[7,11],[8,6],[9,11],[10,30],[11,10],[12,13],[13,4],[14,3],[15,3],[16,6]
+                [0,f1],[1,f2],[2,f3],[3,f4],[4,f5],[5,f6],[6,f7],[7,f8],[8,f9],[9,f10],[10,f11],[11,f12]
             ];
             var data2 = [
-                [0,1],[1,0],[2,2],[3,0],[4,1],[5,3],[6,1],[7,5],[8,2],[9,3],[10,2],[11,1],[12,0],[13,2],[14,8],[15,0],[16,0]
+                [0,10],[1,0],[2,20],[3,30],[4,10],[5,3],[6,10],[7,40],[8,80],[9,50],[10,10],[11,40]
             ];
             $("#flot-dashboard-chart").length && $.plot($("#flot-dashboard-chart"), [
-                data1, data2
+                data1
             ],
                     {
                         series: {
@@ -356,21 +421,24 @@ $s = new Servicos();
                             borderWidth: 1,
                             color: '#d5d5d5'
                         },
-                        colors: ["#1ab394", "#1C84C6"],
+                        colors: ["#1ab394", "#1C00F0"],
                         xaxis:{
                         },
                         yaxis: {
                             ticks: 4
                         },
-                        tooltip: false
+                        tooltip: true
                     }
             );
-
+            var retificahj = document.getElementById('retificahj').value;
+            var geralhj = document.getElementById('geralhj').value;
+            var radiadorhj = document.getElementById('radiadorhj').value;
+            var atendentehj = document.getElementById('atendentehj').value;
             var doughnutData = {
-                labels: ["App","Software","Laptop" ],
+                labels: ["Retífica","Radiador","Geral","Balcão" ],
                 datasets: [{
-                    data: [300,50,200],
-                    backgroundColor: ["#a3e1d4","#dedede","#9CC3DA"]
+                    data: [retificahj,radiadorhj,geralhj,atendentehj],
+                    backgroundColor: ["#a3e154","#ffff00","#9CC3DA","#ff0000"]
                 }]
             } ;
 
@@ -385,12 +453,15 @@ $s = new Servicos();
 
             var ctx4 = document.getElementById("doughnutChart").getContext("2d");
             new Chart(ctx4, {type: 'doughnut', data: doughnutData, options:doughnutOptions});
-
+            var retifica = document.getElementById('retifica').value;
+            var geral = document.getElementById('geral').value;
+            var radiador = document.getElementById('radiador').value;
+            var atendente = document.getElementById('atendente').value;
             var doughnutData = {
-                labels: ["Retífica","Radiador","Geral" ],
+                labels: ["Retífica","Radiador","Geral","Balcão" ],
                 datasets: [{
-                    data: [70,27,85],
-                    backgroundColor: ["#a3e154","#dedede","#9CC3DA"]
+                    data: [retifica,radiador,geral,atendente],
+                    backgroundColor: ["#a3e154","#ffff00","#9CC3DA","#ff0000"]
                 }]
             } ;
 
@@ -401,7 +472,6 @@ $s = new Servicos();
                     display: false
                 }
             };
-
 
             var ctx4 = document.getElementById("doughnutChart2").getContext("2d");
             new Chart(ctx4, {type: 'doughnut', data: doughnutData, options:doughnutOptions});

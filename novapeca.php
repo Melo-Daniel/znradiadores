@@ -1,6 +1,31 @@
 <!DOCTYPE html>
 <?php
 require_once 'lib/Produtos.php';
+$p = new Produtos();
+if (isset($_POST['atualizar'])) {
+
+  $id = $_POST['id'];
+  $nome = $_POST['nome'];
+  $codigo = $_POST['codigo'];
+  $valor = $_POST['valor'];
+  $qtd = $_POST['qtd'];
+  $aplicacao = $_POST['aplicacao'];
+  $img = 'default.jpg';
+  $status = 1;
+
+  $p->setId($id);
+  $p->setNome($nome);
+  $p->setCodigo($codigo);
+  $p->setValor($valor);
+  $p->setQtd($qtd);
+  $p->setAplicacao($aplicacao);
+  $p->setImg($img);
+  $p->setStatus($status);
+
+  if($p->atualizarProduto($p)){
+    header("Location:novapeca.php");
+  }
+}
  ?>
 <html>
 
@@ -99,7 +124,7 @@ function inserirProduto(){
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            
+
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
@@ -314,6 +339,7 @@ function inserirProduto(){
                         <th>QTD</th>
                         <th>VALOR</th>
                         <th>APL.</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -327,7 +353,50 @@ function inserirProduto(){
                             <td><?php echo $value->pro_qtd ?></td>
                             <td class="center"><?php echo $value->pro_valor ?></td>
                             <td class="center"><?php echo $value->pro_aplicacao ?></td>
+                            <td class="center" style="text-align:center"><a href="#" style="color:#777777" data-toggle="modal" data-target="#at<?php echo $value->pro_id ?>"><i class="fa fa-pencil"></i></a></td>
                         </tr>
+
+                        <!-- Trigger the modal with a button -->
+                        <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+
+                        <!-- Modal -->
+                        <div id="at<?php echo $value->pro_id ?>" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Número de Peças</h4>
+                              </div>
+                              <div class="modal-body">
+                                <form class="form-horizontal" action="novapeca.php" method="post">
+                                    <input type="hidden" name="id" id="id" value="<?php echo $value->pro_id ?>">
+                                    <div class="form-group"><label class="control-label">Código</label>
+                                          <input type="text" class="form-control" name="codigo" id="qtd" value="<?php echo $value->pro_codigo ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Descrição</label>
+                                          <input type="text" class="form-control" name="nome" id="qtd" value="<?php echo $value->pro_nome ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Qtd</label>
+                                          <input type="text" class="form-control" name="qtd" id="qtd" value="<?php echo $value->pro_qtd ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Valor</label>
+                                          <input type="text" class="form-control" name="valor" id="qtd" value="<?php echo $value->pro_valor ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Aplicação</label>  
+                                          <input type="text" class="form-control" name="aplicacao" id="qtd" value="<?php echo $value->pro_aplicacao ?>">
+                                    </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="atualizar">Atualizar</button>
+                              </div>
+                            </form>
+                            </div>
+
+                          </div>
+                        </div>
+
                         <?php
                         }
                        ?>
@@ -335,11 +404,12 @@ function inserirProduto(){
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
+                      <th>COD</th>
+                      <th>DESCRIÇÃO</th>
+                      <th>QTD</th>
+                      <th>VALOR</th>
+                      <th>APL.</th>
+                      <th></th>
                     </tr>
                     </tfoot>
                     </table>

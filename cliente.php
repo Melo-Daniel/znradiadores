@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <?php
 require_once 'lib/Cliente.php';
+require_once 'lib/Carro.php';
+$cl = new Clientes();
+$car = new Carros();
+if (isset($_POST['atualizar'])) {
+
+  $cl->setId($_POST['idcliente']);
+  $cl->setNome($_POST['nome']);
+  $cl->setTelefone($_POST['telefone']);
+  $cl->setStatus(1);
+
+  $car->setId($_POST['idcarro']);
+  $car->setDescricao($_POST['descricao']);
+  $car->setPlaca($_POST['placa']);
+  $car->setStatus(1);
+  $car->setCliente($_POST['idcliente']);
+
+  if($cl->atualizarCliente($cl) && $car->atualizarCarro($car)){
+    header("Location:cliente.php");
+  }
+}
  ?>
 <html>
 
@@ -24,19 +44,24 @@ function inserirCliente(){
   var telefone = document.getElementById('telefone').value;
   var descricao = document.getElementById('descricao').value;
   var placa = document.getElementById('placa').value;
-  $.post("actions/ClientesAC.php",
-  {
-      op:1,
-      nome:nome,
-      telefone:telefone,
-      descricao:descricao,
-      placa:placa
-  },
-  function(data,status){
-    if(data == 'ok'){
-      location.reload();
-    }
-  });
+
+  if (nome == "" || descricao == "" || telefone == "" || placa == "") {
+    alert("Todos os campos precisam ser preenchidos!");
+  }else {
+    $.post("actions/ClientesAC.php",
+    {
+        op:1,
+        nome:nome,
+        telefone:telefone,
+        descricao:descricao,
+        placa:placa
+    },
+    function(data,status){
+      if(data == 'ok'){
+        location.reload();
+      }
+    });
+  }
 }
 
 </script>
@@ -307,6 +332,7 @@ function inserirCliente(){
                         <th>TELEFONE</th>
                         <th>CARRO</th>
                         <th>PLACA</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -319,7 +345,47 @@ function inserirCliente(){
                             <td><?php echo $value->cli_telefone ?></td>
                             <td><?php echo $value->car_descricao ?></td>
                             <td class="center"><?php echo $value->car_placa ?></td>
+                            <td class="center" style="text-align:center"><a href="#" style="color:#777777" data-toggle="modal" data-target="#at<?php echo $value->cli_id ?>"><i class="fa fa-pencil"></i></a></td>
                         </tr>
+
+                        <!-- Trigger the modal with a button -->
+                        <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+
+                        <!-- Modal -->
+                        <div id="at<?php echo $value->cli_id ?>" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Número de Peças</h4>
+                              </div>
+                              <div class="modal-body">
+                                <form class="form-horizontal" action="cliente.php" method="post">
+                                    <input type="hidden" name="idcliente" id="idcliente" value="<?php echo $value->cli_id ?>">
+                                    <input type="hidden" name="idcarro" id="idcarro" value="<?php echo $value->car_id ?>">
+                                    <div class="form-group"><label class="control-label">Nome</label>
+                                          <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $value->cli_nome ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Telefone</label>
+                                          <input type="text" class="form-control" name="telefone" id="telefone" value="<?php echo $value->cli_telefone ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Carro</label>
+                                          <input type="text" class="form-control" name="descricao" id="descricao" value="<?php echo $value->car_descricao ?>">
+                                    </div>
+                                    <div class="form-group"><label class="control-label">Placa</label>
+                                          <input type="text" class="form-control" name="placa" id="placa" value="<?php echo $value->car_placa ?>">
+                                    </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="atualizar">Atualizar</button>
+                              </div>
+                            </form>
+                            </div>
+
+                          </div>
+                        </div>
                         <?php
                         }
                        ?>
@@ -331,6 +397,7 @@ function inserirCliente(){
                         <th>TELEFONE</th>
                         <th>CARRO</th>
                         <th>PLACA</th>
+                        <th></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -365,7 +432,7 @@ function inserirCliente(){
     <script>
         $(document).ready(function(){
             $('.dataTables-example').DataTable({
-                pageLength: 25,
+                pageLength: 10,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [

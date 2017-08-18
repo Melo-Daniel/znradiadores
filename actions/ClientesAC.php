@@ -1,7 +1,7 @@
 <?php
 
-require_once '..\lib\Cliente.php';
-require_once '..\lib\Carro.php';
+require_once '../lib/Cliente.php';
+require_once '../lib/Carro.php';
 
 $op = $_POST['op'];
 
