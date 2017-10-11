@@ -36,6 +36,12 @@ class Colaboradores extends DB{
     $stm->execute();
     return $stm->fetchAll();
   }
+  public function listarColaboradoresM(){
+    $sql = "select * from tb_colaboradores join tb_funcoes on(col_fun_id = fun_id) where col_status = 1 and (col_fun_id = 1 or col_fun_id = 2 or col_fun_id = 3)";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
   public function listarColaborador($id){
     $sql = "select * from tb_colaboradores join tb_funcoes on(col_fun_id = fun_id) where col_id = $id";
     $stm = DB::prepare($sql);

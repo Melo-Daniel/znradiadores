@@ -1,7 +1,27 @@
 <?php
 require_once 'lib/ProdutoServico.php';
 require_once 'lib/Servico.php';
+require_once 'lib/Colaboradores.php';
 $servico = $_GET['id'];
+
+if(isset($_POST['atualizar'])){
+  $s = new Servicos();
+
+  $s->setId($_POST['id']);
+  $s->setColaborador($_POST['colaborador']);
+  $s->setValor($_POST['valor']);
+  $s->setMdo($_POST['mdo']);
+  $s->setFpg($_POST['pagamento']);
+  $s->setStatus($_POST['status']);
+
+  if($s->atualizarServicoConcluido($s)){
+    header('Location:servico.php');
+  }
+
+}
+
+$ser = new Servicos();
+$tempSer = $ser->listar($servico);
  ?>
 <!DOCTYPE html>
 <html>
@@ -114,7 +134,7 @@ function finalizarPagamento(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -253,7 +273,7 @@ function finalizarPagamento(){
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a>Serviço</a>
+                        <a>ServiÃ§o</a>
                     </li>
                     <li class="active">
                         <strong>Pagamento</strong>
@@ -276,7 +296,7 @@ function finalizarPagamento(){
                                 <div class="col-md-5">
                                   <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>Nota de Serviço</h5>
+                            <h5>Nota de ServiÃ§o</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -346,6 +366,8 @@ function finalizarPagamento(){
                                         <dd><?php echo $servico ?></dd><br>
                                         <dt>Mecânico</dt>
                                         <dd><?php echo $ser->col_nome ?></dd><br>
+                                        <dt>Mao de obra</dt>
+                                        <dd><?php echo $ser->ser_mao_de_obra ?></dd><br>
                                         <dt>Data</dt>
                                         <dd><?php
                                           $date=date_create($ser->ser_data);
@@ -370,7 +392,7 @@ function finalizarPagamento(){
         </div>
         <div class="footer">
             <div class="pull-right">
-              <button class="btn btn-primary" type="reset"><i class="fa fa-envelope-o"></i></button>
+              <button class="btn btn-primary" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil"></i></button>
               <!--<button class="btn btn-primary" type="button" onclick="iniciarServico()" style="margin-left:10px">Pagamento</button>-->
               <a href="notaEstilizada.php?id=<?php echo $servico?>" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i></a>
             </div>
@@ -378,7 +400,85 @@ function finalizarPagamento(){
 
     </div>
 </div>
+<!-- Trigger the modal with a button
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+-->
 
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Atualizar</h4>
+      </div>
+      <form class="form-horizontal" action="servicoConcluido.php?<?php echo $servico?>" method="post">
+      <div class="modal-body">
+
+
+            <input type="hidden" name="id" id="ids" value="<?php echo $servico?>">
+            <div class="form-group"><label class="col-sm-4 control-label">Mao de Obra</label>
+                <div class="col-sm-8"><input type="text" name="mdo" id="mdo" class="form-control" value="<?php echo $ser->ser_mao_de_obra ?>"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-4 control-label">Valor Pago</label>
+                <div class="col-sm-8"><input type="text" name="valor" id="valor" class="form-control" value="<?php echo $ser->ser_valor ?>"></div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-4 control-label">Status</label>
+              <div class="col-sm-8"><select class="form-control" name="status" id="mecanico">
+                <option value="1"
+                  <?php if($tempSer->ser_sts_id == 1){
+                    echo 'selected';
+                  } ?>
+                >
+                Em espera</option>
+                <option value="2"
+                  <?php if($tempSer->ser_sts_id == 2){
+                    echo 'selected';
+                  } ?>
+                  >Iniciado</option>
+                <option value="3"
+                  <?php if($tempSer->ser_sts_id == 3){
+                    echo 'selected';
+                  } ?>
+                  >Concluido</option>
+                <option value="4"
+                  <?php if($tempSer->ser_sts_id == 4){
+                    echo 'selected';
+                  } ?>
+                  >Cancelado</option>
+              </select></div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-4 control-label">Colaborador</label>
+              <div class="col-sm-8"><select class="form-control" name="colaborador" id="">
+                <?php
+                $c = new Colaboradores();
+                  foreach ($c->listarColaboradores() as $key => $value) {
+                    ?>
+                      <option value="<?php echo $value->col_id?>" <?php
+                      if($value->col_id == $tempSer->ser_col_id){
+                        echo "selected";
+                      } ?>><?php echo $value->col_nome ?></option>
+                    <?php
+                  }
+                 ?>
+              </select></div>
+            </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" name="atualizar">Salvar</button>
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>
 
 
 <!-- Mainly scripts -->

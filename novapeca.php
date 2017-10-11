@@ -2,16 +2,50 @@
 <?php
 require_once 'lib/Produtos.php';
 $p = new Produtos();
+if (isset($_POST['cadastrar'])) {
+  $p = new Produtos();
+
+  $nome = $_POST['nome'];
+  $codigo = $_POST['codigo'];
+  $valor = str_replace(',', '.', $_POST['valor']);
+  $qtd = $_POST['qtd'];
+  $aplicacao = $_POST['aplicacao'];
+  $img = 'default.jpg';
+  $status = 1;
+
+  if($codigo == ""){
+    $codigo = "ZN123";
+  }
+
+  if($aplicacao == ""){
+    $aplicacao = "TODOS";
+  }
+
+  $p->setNome($nome);
+  $p->setCodigo($codigo);
+  $p->setValor($valor);
+  $p->setQtd($qtd);
+  $p->setAplicacao($aplicacao);
+  $p->setImg($img);
+  $p->setStatus($status);
+
+  if($p->inserirProduto($p)){
+    header("Location:produtoServico.php?v=1");
+  }else{
+    echo "erro";
+  }
+}
 if (isset($_POST['atualizar'])) {
 
   $id = $_POST['id'];
   $nome = $_POST['nome'];
   $codigo = $_POST['codigo'];
-  $valor = $_POST['valor'];
+  $valor = str_replace(',', '.', $_POST['valor']);
   $qtd = $_POST['qtd'];
   $aplicacao = $_POST['aplicacao'];
   $img = 'default.jpg';
   $status = 1;
+
 
   $p->setId($id);
   $p->setNome($nome);
@@ -33,16 +67,32 @@ if (isset($_POST['atualizar'])) {
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>INSPINIA | Basic Form</title>
+    <meta http-equiv="Content-Language" content="pt-br">
+    <title>ZN Radiadores | Estoque</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function($){
+        $("#valor").mask("********?*,99");
+      });
+    </script>
+
+    <script type="text/javascript">
+      function setFocus(){
+        var textbox = document.getElementsByClassName("form-control")[0];
+        textbox.focus();
+        //textbox.scrollIntoView();
+      }
+    </script>
+
 <script type="text/javascript">
 function inserirProduto(){
   var nome = document.getElementById('nome').value;
@@ -69,7 +119,7 @@ function inserirProduto(){
 </script>
 </head>
 
-<body class="mini-navbar">
+<body class="mini-navbar" onload="setFocus()">
 
     <div id="wrapper">
 
@@ -256,7 +306,7 @@ function inserirProduto(){
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox float-e-margins collapsed">
+                    <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <h5>Cadastre uma nova peça</h5>
                             <div class="ibox-tools">
@@ -278,26 +328,26 @@ function inserirProduto(){
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <form method="get" class="form-horizontal">
+                            <form method="post" action="novapeca.php" class="form-horizontal">
                                 <div class="form-group"><label class="col-sm-2 control-label">Descrição</label>
-                                    <div class="col-sm-10"><input type="text" id="nome" class="form-control"></div>
+                                    <div class="col-sm-10"><input type="text" name="nome" id="nome" class="form-control" required=""></div>
                                 </div>
                                 <div class="form-group"><label class="col-sm-2 control-label">Código</label>
-                                    <div class="col-sm-10"><input type="text" id="codigo" class="form-control"></div>
+                                    <div class="col-sm-10"><input type="text" name="codigo" id="codigo" class="form-control"></div>
                                 </div>
                                 <div class="form-group"><label class="col-sm-2 control-label">Aplicação</label>
-                                    <div class="col-sm-10"><input type="text" id="aplicacao" class="form-control"></div>
+                                    <div class="col-sm-10"><input type="text" name="aplicacao" id="aplicacao" class="form-control"></div>
                                 </div>
                                 <div class="form-group"><label class="col-sm-2 control-label">Valor</label>
-                                    <div class="col-sm-10"><input type="text" id="valor" class="form-control"></div>
+                                    <div class="col-sm-10"><input type="text" name="valor" id="valor" class="form-control" required=""></div>
                                 </div>
                                 <div class="form-group"><label class="col-sm-2 control-label">Quantidade</label>
-                                    <div class="col-sm-10"><input type="text" id="qtd" class="form-control"></div>
+                                    <div class="col-sm-10"><input type="text" name="qtd" id="qtd" class="form-control" value="1"></div>
                                 </div>
 
                                 <div class="hr-line-dashed"></div>
                                 <div class="form-group">
-                                        <button class="btn btn-primary" type="button" onclick="inserirProduto()" style="float:right; margin-left:10px">Salvar</button>
+                                        <button class="btn btn-primary" type="submit" name="cadastrar" style="float:right; margin-left:10px">Salvar</button>
                                         <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
                                 </div>
                             </form>
@@ -384,7 +434,7 @@ function inserirProduto(){
                                     <div class="form-group"><label class="control-label">Valor</label>
                                           <input type="text" class="form-control" name="valor" id="qtd" value="<?php echo $value->pro_valor ?>">
                                     </div>
-                                    <div class="form-group"><label class="control-label">Aplicação</label>  
+                                    <div class="form-group"><label class="control-label">Aplicação</label>
                                           <input type="text" class="form-control" name="aplicacao" id="qtd" value="<?php echo $value->pro_aplicacao ?>">
                                     </div>
                               </div>
@@ -470,6 +520,7 @@ function inserirProduto(){
         });
 
     </script>
+
 </body>
 
 </html>

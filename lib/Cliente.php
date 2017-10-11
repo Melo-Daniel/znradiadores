@@ -34,6 +34,12 @@ class Clientes extends DB{
     $stm->execute();
     return $stm->fetchAll();
   }
+  public function listarClienteSV(){
+    $sql = "select cli_nome as name, cli_id from tb_clientes where cli_status = 1";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
 
   public function listarUltimoCliente(){
     $sql = "select cli_id from tb_clientes order by cli_id desc limit 1";
@@ -41,6 +47,16 @@ class Clientes extends DB{
     $stm->execute();
     return $stm->fetch();
   }
+
+  public function clientesJSON(){
+    $ser = array();
+    foreach (self::listarClienteSV() as $key => $value) {
+      $ser[] = $value;
+    }
+
+    return json_encode($ser);
+  }
+
 }
 
 ?>

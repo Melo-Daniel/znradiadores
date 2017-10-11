@@ -1,118 +1,22 @@
 <!DOCTYPE html>
 <?php
-require_once 'lib/Cliente.php';
-require_once 'lib/Carro.php';
-require_once 'lib/Servico.php';
-require_once 'lib/Colaboradores.php';
+require_once 'lib/Saida.php';
+require_once 'lib/TipoConta.php';
 
-$cl = new Clientes();
-$car = new Carros();
+$saida = new Saida();
+$tipo  = new TipoConta();
 
 if(isset($_POST['salvar'])){
+  $saida->setValor($_POST['valor']);
+  $saida->setDescricao($_POST['descricao']);
+  $saida->setTipo($_POST['tipo']);
 
-  $cli = new Clientes();
-
-  $cli->setNome($_POST['nome']);
-  $telefone = $_POST['telefone'];
-  if($telefone == ""){
-    $telefone = "999999999";
-  }
-  $cli->setTelefone($telefone);
-  $cli->setStatus(1);
-
-  if($cli->inserirCliente($cli)){
-
-    $cliente = $cli->listarUltimoCliente();
-    $cr = new Carros();
-
-    $descricao = $_POST['descricao'];
-    $placa = $_POST['placa'];
-
-    if($descricao == ""){
-      $descricao  = "SEM CARRO";
-    }
-
-    if($placa == ""){
-      $placa = "SEM PLACA";
-    }
-
-    $cr->setDescricao($descricao);
-    $cr->setPlaca($placa);
-    $cr->setStatus(1);
-    $cr->setCliente($cliente->cli_id);
-
-    $cr->inserirCarro($cr);
-  }
-}
-if(isset($_POST['salvainit'])){
-  if($_POST['mecanico'] == 0){
-    echo "<script type='text/javascript'>alert('Mecanico invalido!')</script>";
-  }else{
-    $cli = new Clientes();
-
-    $cli->setNome($_POST['nome']);
-    $cli->setTelefone($_POST['telefone']);
-    $cli->setStatus(1);
-
-    if($cli->inserirCliente($cli)){
-
-      $cliente = $cli->listarUltimoCliente();
-      $cr = new Carros();
-
-      $descricao = $_POST['descricao'];
-      $placa = $_POST['placa'];
-
-      if($descricao == ""){
-        $descricao  = "SEM CARRO";
-      }
-
-      if($placa == ""){
-        $placa = "SEM PLACA";
-      }
-
-      $cr->setDescricao($descricao);
-      $cr->setPlaca($placa);
-      $cr->setStatus(1);
-      $cr->setCliente($cliente->cli_id);
-
-      if($cr->inserirCarro($cr)){
-        $ser = new Servicos();
-
-        $ser->setCliente($cliente->cli_id);
-        $ser->setColaborador($_POST['mecanico']);
-        $sts = 2;
-        if($_POST['mecanico'] == 12){
-          $sts = 1;
-        }
-        if($ser->iniciarServico($ser,$sts)){
-          header('Location:servico.php');
-        }
-      }else{
-        echo 'erro';
-      }
-    }else{
-      echo 'erro';
-    }
-  }
-}
-if (isset($_POST['atualizar'])) {
-
-  $cl->setId($_POST['idcliente']);
-  $cl->setNome($_POST['nome']);
-  $cl->setTelefone($_POST['telefone']);
-  $cl->setStatus(1);
-
-  $car->setId($_POST['idcarro']);
-  $car->setDescricao($_POST['descricao']);
-  $car->setPlaca($_POST['placa']);
-  $car->setStatus(1);
-  $car->setCliente($_POST['idcliente']);
-
-  if($cl->atualizarCliente($cl) && $car->atualizarCarro($car)){
-    header("Location:cliente.php");
+  if($saida->registrarSaida($saida)){
+    header("Location:saidas.php");
   }
 }
  ?>
+
 <html>
 
 <head>
@@ -120,7 +24,7 @@ if (isset($_POST['atualizar'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ZN Radiadores | Clientes</title>
+    <title>ZN Radiadores | Saídas</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -129,33 +33,7 @@ if (isset($_POST['atualizar'])) {
     <link href="css/style.css" rel="stylesheet">
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
-<script type="text/javascript">
-function inserirCliente(){
-  var nome = document.getElementById('nome').value;
-  var telefone = document.getElementById('telefone').value;
-  var descricao = document.getElementById('descricao').value;
-  var placa = document.getElementById('placa').value;
 
-  if (nome == "" || telefone == "" || descricao== "" || placa == "") {
-    alert("Todos os campos precisam ser preenchidos!");
-  }else {
-    $.post("actions/ClientesAC.php",
-    {
-        op:1,
-        nome:nome,
-        telefone:telefone,
-        descricao:descricao,
-        placa:placa
-    },
-    function(data,status){
-      if(data == 'ok'){
-        location.reload();
-      }
-    });
-  }
-}
-
-</script>
 </head>
 
 <body class="mini-navbar">
@@ -194,7 +72,7 @@ function inserirCliente(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -326,13 +204,13 @@ function inserirCliente(){
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Clientes</h2>
+                    <h2>Saídas</h2>
                     <ol class="breadcrumb">
                         <li>
-                            <a href="index.html">Home</a>
+                            <a href="principal.php">Home</a>
                         </li>
                         <li>
-                            <a>Clientes</a>
+                            <a>Saidas</a>
                         </li>
                     </ol>
                 </div>
@@ -344,52 +222,32 @@ function inserirCliente(){
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox float-e-margins collapsed">
-                        <div class="ibox-title">
-                            <h5>Cadastre um novo cliente</h5>
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title collapse-link">
+                            <h5>Registre suas saídas</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
                                 </a>
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-wrench"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user">
-                                    <li><a href="#">Config option 1</a>
-                                    </li>
-                                    <li><a href="#">Config option 2</a>
-                                    </li>
-                                </ul>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <form method="post" class="form-horizontal" action="cliente.php">
-                                <div class="form-group"><label class="col-sm-2 control-label">Nome</label>
-                                    <div class="col-sm-10"><input type="text" name="nome" id="nome" class="form-control" required=""></div>
+                            <form method="post" class="form-horizontal" action="saidas.php">
+                                <div class="form-group"><label class="col-sm-2 control-label">Valor</label>
+                                    <div class="col-sm-10"><input type="text" name="valor" id="valor" class="form-control" required=""></div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Telefone</label>
-                                    <div class="col-sm-10"><input type="text" name="telefone" id="telefone" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Carro</label>
+                                <div class="form-group"><label class="col-sm-2 control-label">Descrição</label>
                                     <div class="col-sm-10"><input type="text" name="descricao" id="descricao" class="form-control"></div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Placa</label>
-                                    <div class="col-sm-10"><input type="text" name="placa" id="placa" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Mecanico</label>
+                                <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
                                     <div class="col-sm-10">
-                                      <select class="form-control" name="mecanico" id="mecanico">
-                                        <option value="0">Selecione um mecânico</option>
-                                        <option value="12">Colocar em espera</option>
+                                      <select class="form-control" name="tipo" id="tipo">
+                                        <option value="12">Escolha um tipo</option>
                                         <?php
-                                        $c = new Colaboradores();
-                                          foreach ($c->listarColaboradores() as $key => $value) {
+                                          foreach ($tipo->listarTipos() as $key => $value) {
                                             ?>
-                                              <option value="<?php echo $value->col_id ?>"><?php echo $value->col_nome ?></option>
-                                            <?php
+                                              <option value="<?php echo $value->tic_id ?>"><?php echo $value->tic_tipo ?></option>
+                                           <?php
                                           }
                                          ?>
                                       </select>
@@ -397,7 +255,6 @@ function inserirCliente(){
                                 </div>
                                 <div class="hr-line-dashed"></div>
                                 <div class="form-group">
-                                        <button class="btn btn-primary" type="submit" name="salvainit" style="float:right; margin-left:10px">Salvar e Iniciar</button>
                                         <button class="btn btn-primary" type="submit" name="salvar" style="float:right; margin-left:10px">Salvar</button>
                                         <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
                                 </div>
@@ -410,90 +267,35 @@ function inserirCliente(){
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Clientes</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
+                        <h5>Contas do Mês</h5>
                     </div>
                     <div class="ibox-content">
-
                         <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>NOME</th>
-                        <th>TELEFONE</th>
-                        <th>CARRO</th>
-                        <th>PLACA</th>
-                        <th></th>
+                        <th>DATA</th>
+                        <th>VALOR</th>
+                        <th>DESCRIÇÂO</th>
+                        <th>TIPO</th>
                     </tr>
                     </thead>
                     <tbody>
                       <?php
-                        $c = new Clientes();
-                        foreach ($c->listarClientes() as $key => $value) {
+
+                        foreach ($saida->listarSaidas() as $key => $value) {
                         ?>
                         <tr class="gradeX">
-                            <td><?php echo $value->cli_nome ?></td>
-                            <td><?php echo $value->cli_telefone ?></td>
-                            <td><?php echo $value->car_descricao ?></td>
-                            <td class="center"><?php echo $value->car_placa ?></td>
-                            <td class="center" style="text-align:center"><a href="#" style="color:#777777" data-toggle="modal" data-target="#at<?php echo $value->cli_id ?>"><i class="fa fa-pencil"></i></a></td>
+                            <td><?php
+                              $data = date_create($value->sai_data);
+
+                             echo date_format($data, "d/m/Y");
+                             ?></td>
+                            <td><?php echo $value->sai_valor ?></td>
+                            <td><?php echo $value->sai_descricao ?></td>
+                            <td class="center"><?php echo $value->tic_tipo ?></td>
                         </tr>
 
-                        <!-- Trigger the modal with a button -->
-                        <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
-
-                        <!-- Modal -->
-                        <div id="at<?php echo $value->cli_id ?>" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Cliente</h4>
-                              </div>
-                              <div class="modal-body">
-                                <form class="form-horizontal" action="cliente.php" method="post">
-                                    <input type="hidden" name="idcliente" id="idcliente" value="<?php echo $value->cli_id ?>">
-                                    <input type="hidden" name="idcarro" id="idcarro" value="<?php echo $value->car_id ?>">
-                                    <div class="form-group"><label class="control-label">Nome</label>
-                                          <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $value->cli_nome ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Telefone</label>
-                                          <input type="text" class="form-control" name="telefone" id="telefone" value="<?php echo $value->cli_telefone ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Carro</label>
-                                          <input type="text" class="form-control" name="descricao" id="descricao" value="<?php echo $value->car_descricao ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Placa</label>
-                                          <input type="text" class="form-control" name="placa" id="placa" value="<?php echo $value->car_placa ?>">
-                                    </div>
-
-                              </div>
-                              <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" name="atualizar">Atualizar</button>
-                              </div>
-                            </form>
-                            </div>
-
-                          </div>
-                        </div>
                         <?php
                         }
                        ?>
@@ -501,17 +303,52 @@ function inserirCliente(){
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>NOME</th>
-                        <th>TELEFONE</th>
-                        <th>CARRO</th>
-                        <th>PLACA</th>
-                        <th></th>
+                      <th>DATA</th>
+                      <th>VALOR</th>
+                      <th>DESCRIÇÂO</th>
+                      <th>TIPO</th>
                     </tr>
                     </tfoot>
                     </table>
                         </div>
 
                     </div>
+                </div>
+                <div class="row">
+                  <?php
+                    $v = $saida->valorTotalMes();
+
+                   foreach ($saida->valorSaidasTipo() as $key => $value) { ?>
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><?php echo $value->tic_tipo ?></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">R$<?php echo str_replace(".",",",$value->valor) ?></h1>
+                                <div class="stat-percent font-bold"><?php $p = ($value->valor * 100)/$v->valor; echo round($p,2); ?>%</i></div>
+                            </div>
+
+                        </div>
+                    </div>
+                  <?php } ?>
+                  <div class="col-lg-3">
+                      <div class="ibox float-e-margins">
+                          <div class="ibox-title">
+                              <h5>Total</h5>
+                          </div>
+                          <div class="ibox-content">
+                              <h1 class="no-margins">R$<?php
+                              if($v->valor == null){
+                                echo "0,00";
+                              }else{
+                                  echo str_replace(".",",",$v->valor);
+                              }
+                              ?></h1>
+                          </div>
+
+                      </div>
+                  </div>
                 </div>
             </div>
             </div>

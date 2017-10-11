@@ -3,8 +3,12 @@ require_once 'lib/ProdutoServico.php';
 require_once 'lib/Servico.php';
 $servico = $_GET['id'];
 if (isset($_POST['adicionar'])) {
+
+
+  $mdo = $_POST['mdo'];
+  $valor = $_POST['valor'];
   $s = new Servicos();
-  $s->atualizarMdoValor($_POST['mdo'],$_POST['valor']+$_POST['mdo'],$servico);
+  $s->atualizarMdoValor($mdo,$valor,$servico);
 }
  ?>
 <!DOCTYPE html>
@@ -71,11 +75,9 @@ function finalizarPagamento(){
     servico:servico,
     valor:200
   },function(data,status){
-    if(data=='ok'){
-      location.href = "principal.php";
-    }else{
-      alert(data);
-    }
+
+      window.location = "servico.php";
+
   });
 }
 </script>
@@ -117,7 +119,7 @@ function finalizarPagamento(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -256,7 +258,7 @@ function finalizarPagamento(){
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a>Serviço</a>
+                        <a>ServiÃ§o</a>
                     </li>
                     <li class="active">
                         <strong>Pagamento</strong>
@@ -272,7 +274,7 @@ function finalizarPagamento(){
             <div class="row">
               <?php
                 $s = new Servicos();
-                $ser = $s->listarServico($servico);
+                $ser = $s->listar($servico);
                ?>
                 <div class="col-lg-12">
 
@@ -330,80 +332,67 @@ function finalizarPagamento(){
                                 </tbody>
                             </table>
                             <hr>
-                            <form class="form-horizontal" action="pagamento.php?id=<?php echo $servico?>" method="post">
-                                <div class="form-group"><label class="col-sm-4 control-label">Mão de Obra</label>
-                                    <div class="col-sm-8"><input type="text" name="mdo" id="mdo" class="form-control" value="<?php echo $ser->ser_mao_de_obra ?>"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-4 control-label">Valor Pago</label>
-                                    <div class="col-sm-8"><input type="text" name="valor" id="valor" class="form-control" value="<?php echo $ser->ser_valor ?>"></div>
-                                </div>
-                                <div class="hr-line-dashed"></div>
-                                <div class="form-group">
-                                  <button type="submit" class="btn btn-primary" name="adicionar" style="float:right; margin-left:10px">Salvar</button>
-                                </div>
-                            </form>
+
                         </div>
                     </div>
                                 </div>
-                                <div class="col-md-7">
+                                <form class="form-horizontal" action="actions/PagamentoAC.php" method="post">
+                                  <input type="hidden" name="op" value="1">
+                                  <input type="hidden" name="valor" value="100">
+                                  <input type="hidden" name="servico" id="servico" value="<?php echo $servico?>">
+                                  <div class="col-md-7">
 
-                                    <h2 class="font-bold m-b-xs">
-                                        <?php echo $ser->cli_nome ?>
-                                    </h2>
-                                    <small><?php echo $ser->car_descricao ?></small>
-                                    <hr>
-                                    <div>
-                                        <button class="btn btn-primary pull-right" onclick="finalizarPagamento()"> Finalizar Pagamento</button>
-                                        <h1 class="product-main-price">R$<?php echo $ser->ser_valor ?></h1>
-                                    </div>
-                                    <hr>
+                                      <h2 class="font-bold m-b-xs">
+                                          <?php echo $ser->cli_nome ?>
+                                      </h2>
+                                      <small><?php echo $ser->car_descricao ?></small>
+                                      <hr>
 
-                                    <dl class="dl-horizontal m-t-md small">
-                                        <dt>ID</dt>
-                                        <dd><?php echo $servico ?></dd><br>
-                                        <dt>Mecânico</dt>
-                                        <dd><?php echo $ser->col_nome ?></dd><br>
-                                        <dt>Data</dt>
-                                        <dd><?php
-                                          $date=date_create($ser->ser_data);
-                                          echo date_format($date,"d/m/Y");
-                                         ?></dd><br>
-                                        <dt>Forma de Pagamento</dt>
-                                        <dd>
-                                          <div class="col-sm-10"><label class="radio-inline">
-                                                      <input type="radio" value="2" id="dinheiro" name="fg" checked> Dinheiro </label> <label class="radio-inline">
-                                                      <input type="radio" value="4" id="cartao" name="fg"> Cartão </label> <label class="radio-inline">
-                                                      <input type="radio" value="5" id="transferencia" name="fg"> Transferencia </label>
-									                        </div>
-                                        </dd>
-                                        <br>
-                                        <dt>Garantia</dt>
-                                        <dd>
-                                          <div class="col-sm-10"><label class="radio-inline">
-										                                  <input type="radio" value="1" id="g0" name="fga"> 0 </label> <label class="radio-inline">
-                                                      <input type="radio" value="2" id="g1" name="fga" checked> 3 </label> <label class="radio-inline">
-                                                      <input type="radio" value="3" id="g2" name="fga"> 6 </label> <label class="radio-inline">
-                                                      <input type="radio" value="4" id="g3" name="fga"> 12 </label>
-									                        </div>
-                                        </dd><br>
-                                        <dt></dt>
-                                        <dd>Periodo de garantia em meses.</dd>
-                                    </dl>
+                                      <div>
+                                          <button class="btn btn-primary pull-right" type="submit"> Finalizar Pagamento</button>
+                                          <h1 class="product-main-price">R$<?php echo $ser->ser_valor ?></h1>
+                                      </div>
+                                      <hr>
 
-
-                                </div>
+                                      <dl class="dl-horizontal m-t-md small">
+                                          <dt>ID</dt>
+                                          <dd><?php echo $servico ?></dd><br>
+                                          <dt>Mecânico</dt>
+                                          <dd><?php echo $ser->col_nome ?></dd><br>
+                                          <dt>Data</dt>
+                                          <dd><?php
+                                            $date=date_create($ser->ser_data);
+                                            echo date_format($date,"d/m/Y");
+                                           ?></dd><br>
+                                          <dt>Forma de Pagamento</dt>
+                                          <dd>
+                                            <div class="col-sm-10"><label class="radio-inline">
+                                                        <input type="radio" value="2" id="dinheiro" name="pagamento" checked> Dinheiro </label> <label class="radio-inline">
+                                                        <input type="radio" value="4" id="cartao" name="pagamento"> Cartao Cred</label> <label class="radio-inline">
+                                                        <input type="radio" value="3" id="cartao" name="pagamento"> Cartao Deb</label> <label class="radio-inline">
+                                                        <input type="radio" value="5" id="transferencia" name="pagamento"> Transferencia </label>
+                                            </div>
+                                          </dd>
+                                          <br>
+                                          <dt>Garantia</dt>
+                                          <dd>
+                                            <div class="col-sm-10"><label class="radio-inline">
+                                                        <input type="radio" value="1" id="g0" name="garantia"> 0 </label> <label class="radio-inline">
+                                                        <input type="radio" value="2" id="g1" name="garantia" checked> 3 </label> <label class="radio-inline">
+                                                        <input type="radio" value="3" id="g2" name="garantia"> 6 </label> <label class="radio-inline">
+                                                        <input type="radio" value="4" id="g3" name="garantia"> 12 </label>
+                                            </div>
+                                          </dd><br>
+                                          <dt></dt>
+                                          <dd>Periodo de garantia em meses.</dd>
+                                      </dl>
+                                  </div>
+                                </form>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
-
-
-
         </div>
         <div class="footer">
             <div class="pull-right">

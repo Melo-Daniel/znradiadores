@@ -1,12 +1,14 @@
 <?php
 require_once 'lib/Colaboradores.php';
 session_start();
+
 if(isset($_POST['login'])){
 $c = new Colaboradores();
 if($c->login($_POST['nome'],$_POST['senha']) > 0)
   header("Location:principal.php");
   $_SESSION['usuario'] = 6;
 }
+
 ?>
 <!DOCTYPE html>
 <html>

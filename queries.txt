@@ -1,0 +1,6 @@
+SELECT col_nome,count(ser_id) as valor FROM tb_servicos JOIN tb_colaboradores on (ser_col_id = col_id) where ser_sts_id = 3 GROUP BY col_id ORDER BY valor DESC
+
+
+SELECT col_nome,sum(ser_valor) as valor FROM tb_servicos JOIN tb_colaboradores on (ser_col_id = col_id) where ser_sts_id = 3 GROUP BY col_id ORDER BY valor DESC
+
+SELECT col_id,col_nome,COUNT(ser_id) as colaboradores from tb_colaboradores join tb_servicos on (col_id = ser_col_id) where yearweek(ser_data,7) = yearweek(current_date(),7) GROUP BY col_id

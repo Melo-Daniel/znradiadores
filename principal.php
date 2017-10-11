@@ -4,6 +4,7 @@ if(!isset($_SESSION['usuario'])){
   header("Location:index.php");
 }
 require_once 'lib/Servico.php';
+require_once 'lib/Colaboradores.php';
 $s = new Servicos();
 ?>
 <!DOCTYPE html>
@@ -116,13 +117,28 @@ $s = new Servicos();
                     </li>
 
                     <li>
-                        <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
+                        <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
                     </li>
                     <li>
                         <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
                     </li>
                     <li>
                         <a href="colaboradores.php"><i class="fa fa-user-o"></i> <span class="nav-label">Colaboradores</span></a>
+                    </li>
+                    <li>
+                        <a href="relatorios.php?id=1&datai=2017-08-01&dataf=2017-08-30"><i class="fa fa-list"></i> <span class="nav-label">Colaboradores</span></a>
+                    </li>
+                    <li>
+                    <a href="#"><i class="fa fa-pie-chart"></i> <span class="nav-label">Relatorios</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="relatorioSetor.php?id=3">Radiador</a></li>
+                        <li><a href="relatorioSetor.php?id=2">Geral</a></li>
+                        <li><a href="relatorioSetor.php?id=1">Retífica</a></li>
+                        <li><a href="relatorioSetor.php?id=4">Balcão</a></li>
+                    </ul>
+                    </li>
+                    <li>
+                        <a href="saidas.php"><i class="fa fa-money"></i> <span class="nav-label">Colaboradores</span></a>
                     </li>
                     <!-- Fim menu lateral -->
                 </ul>
@@ -321,6 +337,40 @@ $s = new Servicos();
                         </dl>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                      <div class="row">
+                        <?php
+                        $c = new Colaboradores();
+                          foreach ($c->listarColaboradoresM() as $key => $value) {
+                        ?>
+                        <div class="col-lg-4">
+                            <div class="contact-box">
+                                <a href="ponto.php?ids=<?php echo $value->col_id?>">
+                                <div class="col-sm-4">
+                                    <div class="text-center">
+                                        <img alt="image" class="img-circle m-t-xs img-responsive" src="img/<?php echo $value->col_img ?>">
+                                        <div class="m-t-xs font-bold"><?php echo $value->fun_funcao ?></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h3><strong><?php echo $value->col_nome ?></strong></h3>
+
+                                    <address>
+                                      <p class="small font-bold">
+                                        <span><i class="fa fa-circle text-navy"></i> Disponível</span>
+                                      </p>
+                                    </address>
+                                </div>
+                                <div class="clearfix"></div>
+                                    </a>
+                            </div>
+                        </div>
+                        <?php
+                          }
+                         ?>
+
+                          </div>
+                    </div>
 
             </div>
 
@@ -387,20 +437,28 @@ $s = new Servicos();
             var f11 = document.getElementById('faturamento11').value;
             var f12 = document.getElementById('faturamento12').value;
 
+
             var data1 = [
                 [0,f1],[1,f2],[2,f3],[3,f4],[4,f5],[5,f6],[6,f7],[7,f8],[8,f9],[9,f10],[10,f11],[11,f12]
             ];
             var data2 = [
-                [0,10],[1,0],[2,20],[3,30],[4,10],[5,3],[6,10],[7,40],[8,80],[9,50],[10,10],[11,40]
+                [0,1033],[1,444],[2,2000],[3,3000],[4,1000],[5,30000],[6,1000],[7,400],[8,8000],[9,5000],[10,100],[11,4000]
             ];
             $("#flot-dashboard-chart").length && $.plot($("#flot-dashboard-chart"), [
-                data1
+                data1,data2
             ],
                     {
                         series: {
                             lines: {
                                 show: false,
-                                fill: true
+                                fill: true,
+                                fillColor: {
+                                    colors: [{
+                                        opacity: 1
+                                    }, {
+                                        opacity: 1
+                                    }]
+                                },
                             },
                             splines: {
                                 show: true,
@@ -409,7 +467,7 @@ $s = new Servicos();
                                 fill: 0.4
                             },
                             points: {
-                                radius: 0,
+                                radius: 0.1,
                                 show: true
                             },
                             shadowSize: 2
@@ -423,6 +481,8 @@ $s = new Servicos();
                         },
                         colors: ["#1ab394", "#1C00F0"],
                         xaxis:{
+                          ticks: 12,
+                          labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho","Agosto","Setembro","Outubro","Nobembro","Dezembro"]
                         },
                         yaxis: {
                             ticks: 4
@@ -435,7 +495,7 @@ $s = new Servicos();
             var radiadorhj = document.getElementById('radiadorhj').value;
             var atendentehj = document.getElementById('atendentehj').value;
             var doughnutData = {
-                labels: ["Retífica","Radiador","Geral","Balcão" ],
+                labels: ["Retíica","Rad","Geral","Balcão" ],
                 datasets: [{
                     data: [retificahj,radiadorhj,geralhj,atendentehj],
                     backgroundColor: ["#a3e154","#ffff00","#9CC3DA","#ff0000"]
@@ -453,12 +513,13 @@ $s = new Servicos();
 
             var ctx4 = document.getElementById("doughnutChart").getContext("2d");
             new Chart(ctx4, {type: 'doughnut', data: doughnutData, options:doughnutOptions});
+
             var retifica = document.getElementById('retifica').value;
             var geral = document.getElementById('geral').value;
             var radiador = document.getElementById('radiador').value;
             var atendente = document.getElementById('atendente').value;
             var doughnutData = {
-                labels: ["Retífica","Radiador","Geral","Balcão" ],
+                labels: ["Retífica","Rad","Geral","Balcão" ],
                 datasets: [{
                     data: [retifica,radiador,geral,atendente],
                     backgroundColor: ["#a3e154","#ffff00","#9CC3DA","#ff0000"]

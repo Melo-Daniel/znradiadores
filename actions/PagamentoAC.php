@@ -12,7 +12,7 @@ switch ($op) {
     $p->setValor($_POST['valor']);
     $garantia = $_POST['garantia'];
     if($p->finalizarPagamento($p,$garantia)){
-      echo 'ok';
+      header('Location:../servico.php');
     }else{
       echo 'erro';
     }

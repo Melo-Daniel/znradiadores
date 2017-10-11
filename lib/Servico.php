@@ -58,6 +58,12 @@ class Servicos extends DB{
     $stm->execute();
     return $stm->fetchAll();
   }
+  public function listar($id){
+    $sql = "select * from tb_servicos where ser_id = $id";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
   public function listarTodosServicos(){
     $sql = "select * from tb_servicos
 	         join tb_clientes on(cli_id = ser_cli_id)
@@ -213,5 +219,103 @@ class Servicos extends DB{
     $stm->execute();
     return $stm->fetchAll();
   }
+
+  public function relatorioServicoData($id,$datai,$dataf){
+    $sql = "select * from tb_servicos
+            join tb_clientes on(cli_id = ser_cli_id)
+            join tb_carros on (cli_id = car_cli_id)
+            join tb_status_servicos on(sts_id = ser_sts_id)
+            join tb_pagamentos on(pag_id = pag_ser_id)
+            join tb_formas_pagamentos on(fpg_id = pag_fpg_id)
+            join tb_garantias on(gar_id = ser_gar_id)
+            join tb_colaboradores on(col_id = ser_col_id)
+            where ser_data between '$datai' and '$dataf' and ser_col_id = $id and ser_sts_id = 3;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
+  public function atualizarServicoConcluido($s){
+    $sql = "update tb_servicos set ser_col_id = $s->colaborador, ser_sts_id = $s->status, ser_valor = $s->valor, ser_mao_de_obra = $s->mdo where ser_id = $s->id";
+    $stm = DB::prepare($sql);
+    return $stm->execute();
+  }
+
+  //Relatorio setor
+
+  public function relatorioSetor(){
+
+  }
+
+  public function faturamentoAnualSetor($setor){
+    $sql = "select sum(ser_valor) as faturamento from tb_servicos
+            join tb_colaboradores on(col_id = ser_col_id)
+            join tb_funcoes on (fun_id = col_fun_id)
+	           where year(ser_data) = year(current_date()) and
+             ser_sts_id = 3 and fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+  public function faturamentoMensalSetor($setor){
+    $sql = "select sum(ser_valor) as faturamento from tb_servicos
+              join tb_colaboradores on(col_id = ser_col_id)
+              join tb_funcoes on (fun_id = col_fun_id)
+  	          where month(ser_data) = month(current_date()) and
+  			      year(ser_data) = year(current_date()) and
+              ser_sts_id = 3 and fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+  public function faturamentoSemanalSetor($setor){
+    $sql = "select sum(ser_valor) as faturamento from tb_servicos
+            join tb_colaboradores on(col_id = ser_col_id)
+            join tb_funcoes on (fun_id = col_fun_id)
+	          where yearweek(ser_data,5) = yearweek(current_date(),5) and
+            ser_sts_id = 3 and fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+  public function faturamentoDiarioSetor($setor){
+    $sql = "select sum(ser_valor) as faturamento from tb_servicos
+              join tb_colaboradores on(col_id = ser_col_id)
+              join tb_funcoes on (fun_id = col_fun_id)
+  	          where ser_data = current_date() and
+              ser_sts_id = 3 and fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+
+  public function faturamentoMensalSetorGrafico($mes,$setor){
+    $sql = "select sum(ser_valor) as faturamento from tb_servicos
+            join tb_colaboradores on(col_id = ser_col_id)
+            join tb_funcoes on (fun_id = col_fun_id)
+	          where month(ser_data) = $mes and
+			      year(ser_data) = year(current_date()) and
+            ser_sts_id = 3 and fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetch();
+  }
+
+  public function relatorioSemanalDeServicosColaboradorSetor($setor){
+    $sql = "select * from tb_servicos
+            	  join tb_clientes on (cli_id = ser_cli_id)
+                join tb_carros on (cli_id = car_cli_id)
+            	  join tb_colaboradores on (col_id = ser_col_id)
+                join tb_funcoes on (fun_id = col_fun_id)
+                join tb_pagamentos on (ser_id = pag_ser_id)
+                join tb_formas_pagamentos on (fpg_id = pag_fpg_id)
+            	where
+            		yearweek(ser_data,5) = yearweek(current_date(),5) and
+            		ser_sts_id = 3 and
+            		col_fun_id = $setor;";
+    $stm = DB::prepare($sql);
+    $stm->execute();
+    return $stm->fetchAll();
+  }
 }
+
  ?>

@@ -1,126 +1,32 @@
 <!DOCTYPE html>
 <?php
-require_once 'lib/Cliente.php';
-require_once 'lib/Carro.php';
 require_once 'lib/Servico.php';
 require_once 'lib/Colaboradores.php';
+require_once 'lib/Cliente.php';
+$id = $_GET['id'];
+$datai = $_GET['datai'];
+$dataf = $_GET['dataf'];
 
-$cl = new Clientes();
-$car = new Carros();
-
-if(isset($_POST['salvar'])){
-
-  $cli = new Clientes();
-
-  $cli->setNome($_POST['nome']);
-  $telefone = $_POST['telefone'];
-  if($telefone == ""){
-    $telefone = "999999999";
-  }
-  $cli->setTelefone($telefone);
-  $cli->setStatus(1);
-
-  if($cli->inserirCliente($cli)){
-
-    $cliente = $cli->listarUltimoCliente();
-    $cr = new Carros();
-
-    $descricao = $_POST['descricao'];
-    $placa = $_POST['placa'];
-
-    if($descricao == ""){
-      $descricao  = "SEM CARRO";
-    }
-
-    if($placa == ""){
-      $placa = "SEM PLACA";
-    }
-
-    $cr->setDescricao($descricao);
-    $cr->setPlaca($placa);
-    $cr->setStatus(1);
-    $cr->setCliente($cliente->cli_id);
-
-    $cr->inserirCarro($cr);
-  }
+if(isset($_POST['buscar'])){
+  $id = $_POST['col'];
+  $datai = $_POST['dti'];
+  $dataf = $_POST['dtf'];
 }
-if(isset($_POST['salvainit'])){
-  if($_POST['mecanico'] == 0){
-    echo "<script type='text/javascript'>alert('Mecanico invalido!')</script>";
-  }else{
-    $cli = new Clientes();
 
-    $cli->setNome($_POST['nome']);
-    $cli->setTelefone($_POST['telefone']);
-    $cli->setStatus(1);
-
-    if($cli->inserirCliente($cli)){
-
-      $cliente = $cli->listarUltimoCliente();
-      $cr = new Carros();
-
-      $descricao = $_POST['descricao'];
-      $placa = $_POST['placa'];
-
-      if($descricao == ""){
-        $descricao  = "SEM CARRO";
-      }
-
-      if($placa == ""){
-        $placa = "SEM PLACA";
-      }
-
-      $cr->setDescricao($descricao);
-      $cr->setPlaca($placa);
-      $cr->setStatus(1);
-      $cr->setCliente($cliente->cli_id);
-
-      if($cr->inserirCarro($cr)){
-        $ser = new Servicos();
-
-        $ser->setCliente($cliente->cli_id);
-        $ser->setColaborador($_POST['mecanico']);
-        $sts = 2;
-        if($_POST['mecanico'] == 12){
-          $sts = 1;
-        }
-        if($ser->iniciarServico($ser,$sts)){
-          header('Location:servico.php');
-        }
-      }else{
-        echo 'erro';
-      }
-    }else{
-      echo 'erro';
-    }
-  }
+if(isset($_POST['buscarS'])){
+  $id = $_POST['col'];
 }
-if (isset($_POST['atualizar'])) {
 
-  $cl->setId($_POST['idcliente']);
-  $cl->setNome($_POST['nome']);
-  $cl->setTelefone($_POST['telefone']);
-  $cl->setStatus(1);
-
-  $car->setId($_POST['idcarro']);
-  $car->setDescricao($_POST['descricao']);
-  $car->setPlaca($_POST['placa']);
-  $car->setStatus(1);
-  $car->setCliente($_POST['idcliente']);
-
-  if($cl->atualizarCliente($cl) && $car->atualizarCarro($car)){
-    header("Location:cliente.php");
-  }
-}
- ?>
+?>
 <html>
 
 <head>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="pt-br">
 
-    <title>ZN Radiadores | Clientes</title>
+    <title>Serviços</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -130,29 +36,30 @@ if (isset($_POST['atualizar'])) {
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 <script type="text/javascript">
-function inserirCliente(){
-  var nome = document.getElementById('nome').value;
-  var telefone = document.getElementById('telefone').value;
-  var descricao = document.getElementById('descricao').value;
-  var placa = document.getElementById('placa').value;
 
-  if (nome == "" || telefone == "" || descricao== "" || placa == "") {
-    alert("Todos os campos precisam ser preenchidos!");
-  }else {
-    $.post("actions/ClientesAC.php",
+function iniciarServico(){
+
+  var cliente = document.getElementById('cliente').value;
+  var mecanico = document.getElementById('mecanico').value;
+  var status = 2;
+  if(mecanico == 12){
+    status = 1;
+  }
+  if(mecanico == 0){
+    alert('Mecanico invalido! Selecione uma outra opcao.');
+  }else{
+    $.post("actions/ServicosAC.php",
     {
         op:1,
-        nome:nome,
-        telefone:telefone,
-        descricao:descricao,
-        placa:placa
+        cliente:cliente,
+        mecanico:mecanico,
+        status:status
     },
     function(data,status){
-      if(data == 'ok'){
         location.reload();
-      }
     });
   }
+
 }
 
 </script>
@@ -194,7 +101,7 @@ function inserirCliente(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -213,6 +120,7 @@ function inserirCliente(){
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
@@ -326,13 +234,13 @@ function inserirCliente(){
         </div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Clientes</h2>
+                    <h2>ServiÃ§os</h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            <a>Clientes</a>
+                            <a>ServiÃ§os</a>
                         </li>
                     </ol>
                 </div>
@@ -341,12 +249,62 @@ function inserirCliente(){
                 </div>
             </div>
         <div class="wrapper wrapper-content animated fadeInRight">
-
+        <input type="hidden" name="cont" id="cont" value="<?php echo $cont; ?>">
             <div class="row">
+              <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                      <div class="ibox-title">
+                          <h5>Relatorio Semanal</h5>
+                          <div class="ibox-tools">
+                              <a class="collapse-link">
+                                  <i class="fa fa-chevron-up"></i>
+                              </a>
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                  <i class="fa fa-wrench"></i>
+                              </a>
+                              <ul class="dropdown-menu dropdown-user">
+                                  <li><a href="#">Config option 1</a>
+                                  </li>
+                                  <li><a href="#">Config option 2</a>
+                                  </li>
+                              </ul>
+                              <a class="close-link">
+                                  <i class="fa fa-times"></i>
+                              </a>
+                          </div>
+                      </div>
+                      <div class="ibox-content">
+                          <form method="post" class="form-horizontal" action="relatorios.php?id=1&datai=2017-08-01&dataf=2017-08-30">
+
+                              <div class="form-group"><label class="col-sm-2 control-label">Colaborador</label>
+                                  <div class="col-sm-10">
+                                    <select class="form-control" name="col" id="mecanico">
+                                      <?php
+                                      $c = new Colaboradores();
+                                        foreach ($c->listarColaboradores() as $key => $value) {
+                                          ?>
+                                            <option value="<?php echo $value->col_id ?>"><?php echo $value->col_nome ?></option>
+                                          <?php
+                                        }
+                                       ?>
+                                    </select>
+                                  </div>
+                              </div>
+                              <div class="hr-line-dashed"></div>
+                              <div class="form-group">
+                                <div class="pull-right">
+                                  <button class="btn btn-white" type="reset" >Cancelar</button>
+                                  <button class="btn btn-primary" name="buscarS" type="submit"style="margin-left:10px">Buscar</button>
+                                </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins collapsed">
                         <div class="ibox-title">
-                            <h5>Cadastre um novo cliente</h5>
+                            <h5>Relatorio Semanal</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -366,24 +324,20 @@ function inserirCliente(){
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <form method="post" class="form-horizontal" action="cliente.php">
-                                <div class="form-group"><label class="col-sm-2 control-label">Nome</label>
-                                    <div class="col-sm-10"><input type="text" name="nome" id="nome" class="form-control" required=""></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Telefone</label>
-                                    <div class="col-sm-10"><input type="text" name="telefone" id="telefone" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Carro</label>
-                                    <div class="col-sm-10"><input type="text" name="descricao" id="descricao" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Placa</label>
-                                    <div class="col-sm-10"><input type="text" name="placa" id="placa" class="form-control"></div>
-                                </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">Mecanico</label>
+                            <form method="post" class="form-horizontal" action="relatorios.php?id=1&datai=2017-08-01&dataf=2017-08-30">
+                                <div class="form-group"><label class="col-sm-2 control-label">Data Inicial</label>
                                     <div class="col-sm-10">
-                                      <select class="form-control" name="mecanico" id="mecanico">
-                                        <option value="0">Selecione um mecânico</option>
-                                        <option value="12">Colocar em espera</option>
+                                      <input type="date" name="dti" value="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-2 control-label">Data Final</label>
+                                    <div class="col-sm-10">
+                                      <input type="date" name="dtf" value="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-2 control-label">Colaborador</label>
+                                    <div class="col-sm-10">
+                                      <select class="form-control" name="col" id="mecanico">
                                         <?php
                                         $c = new Colaboradores();
                                           foreach ($c->listarColaboradores() as $key => $value) {
@@ -397,9 +351,10 @@ function inserirCliente(){
                                 </div>
                                 <div class="hr-line-dashed"></div>
                                 <div class="form-group">
-                                        <button class="btn btn-primary" type="submit" name="salvainit" style="float:right; margin-left:10px">Salvar e Iniciar</button>
-                                        <button class="btn btn-primary" type="submit" name="salvar" style="float:right; margin-left:10px">Salvar</button>
-                                        <button class="btn btn-white" type="reset" style="float:right">Cancelar</button>
+                                  <div class="pull-right">
+                                    <button class="btn btn-white" type="reset" >Cancelar</button>
+                                    <button class="btn btn-primary" name="buscar" type="submit"style="margin-left:10px">Buscar</button>
+                                  </div>
                                 </div>
                             </form>
                         </div>
@@ -410,7 +365,7 @@ function inserirCliente(){
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Clientes</h5>
+                        <h5>Serviços</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -435,65 +390,49 @@ function inserirCliente(){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>NOME</th>
-                        <th>TELEFONE</th>
+                        <th>ID</th>
+                        <th>CLIENTE</th>
                         <th>CARRO</th>
-                        <th>PLACA</th>
+                        <th>VALOR</th>
+                        <th>MECANICO</th>
+                        <th>PAGAMENTO</th>
+                        <th></th>
                         <th></th>
                     </tr>
                     </thead>
                     <tbody>
                       <?php
-                        $c = new Clientes();
-                        foreach ($c->listarClientes() as $key => $value) {
+                        $c = new Servicos();
+                        foreach ($c->relatorioSemanalDeServicosColaborador($id) as $key => $value) {
                         ?>
                         <tr class="gradeX">
+                            <td><?php echo $value->ser_id ?></td>
                             <td><?php echo $value->cli_nome ?></td>
-                            <td><?php echo $value->cli_telefone ?></td>
                             <td><?php echo $value->car_descricao ?></td>
-                            <td class="center"><?php echo $value->car_placa ?></td>
-                            <td class="center" style="text-align:center"><a href="#" style="color:#777777" data-toggle="modal" data-target="#at<?php echo $value->cli_id ?>"><i class="fa fa-pencil"></i></a></td>
+                            <td><?php echo $value->ser_valor ?></td>
+                            <td class="center"><?php echo $value->col_nome ?></td>
+                            <td class="center"><?php echo $value->fpg_forma?></td>
+                            <?php
+                              if($value->ser_sts_id == 3){
+                              ?>
+                                <td style="text-align:center"><a href="servicoConcluido.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }elseif($value->ser_sts_id == 4){
+                            ?>
+                              <td style="text-align:center"><a href="servicoCancelado.php"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                          }elseif($value->ser_sts_id == 1){
+                            ?>
+                              <td style="text-align:center"><a href="servicoEspera.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                            }else{
+                              ?>
+                                <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }
+                             ?>
+                             <td style="text-align:center;"><a href="notaEstilizada.php?id=<?php echo $value->ser_id ?>" target="_blank" style="color:#888888"><i class="fa fa-print"></i></a></td>
                         </tr>
-
-                        <!-- Trigger the modal with a button -->
-                        <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
-
-                        <!-- Modal -->
-                        <div id="at<?php echo $value->cli_id ?>" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Cliente</h4>
-                              </div>
-                              <div class="modal-body">
-                                <form class="form-horizontal" action="cliente.php" method="post">
-                                    <input type="hidden" name="idcliente" id="idcliente" value="<?php echo $value->cli_id ?>">
-                                    <input type="hidden" name="idcarro" id="idcarro" value="<?php echo $value->car_id ?>">
-                                    <div class="form-group"><label class="control-label">Nome</label>
-                                          <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $value->cli_nome ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Telefone</label>
-                                          <input type="text" class="form-control" name="telefone" id="telefone" value="<?php echo $value->cli_telefone ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Carro</label>
-                                          <input type="text" class="form-control" name="descricao" id="descricao" value="<?php echo $value->car_descricao ?>">
-                                    </div>
-                                    <div class="form-group"><label class="control-label">Placa</label>
-                                          <input type="text" class="form-control" name="placa" id="placa" value="<?php echo $value->car_placa ?>">
-                                    </div>
-
-                              </div>
-                              <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" name="atualizar">Atualizar</button>
-                              </div>
-                            </form>
-                            </div>
-
-                          </div>
-                        </div>
                         <?php
                         }
                        ?>
@@ -501,11 +440,14 @@ function inserirCliente(){
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>NOME</th>
-                        <th>TELEFONE</th>
-                        <th>CARRO</th>
-                        <th>PLACA</th>
-                        <th></th>
+                      <th>ID</th>
+                      <th>CLIENTE</th>
+                      <th>CARRO</th>
+                      <th>VALOR</th>
+                      <th>MECANICO</th>
+                      <th>PAGAMENTO</th>
+                      <th></th>
+                      <th></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -515,6 +457,105 @@ function inserirCliente(){
                 </div>
             </div>
             </div>
+            <!-- inicio da row -->
+            <?php for ($i=0; $i < 12; $i++) {
+              # code...
+             ?>
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins collapsed">
+                    <div class="ibox-title">
+                        <h5>Todos Serviços <?php echo $i+1 ?></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CLIENTE</th>
+                        <th>CARRO</th>
+                        <th>VALOR</th>
+                        <th>MECANICO</th>
+                        <th>PAGAMENTO</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                        foreach ($c->listarTodosServicos() as $key => $value) {
+                        ?>
+                        <tr class="gradeX">
+                            <td><?php echo $value->ser_id ?></td>
+                            <td><?php echo $value->cli_nome ?></td>
+                            <td><?php echo $value->car_descricao ?></td>
+                            <td><?php echo $value->ser_valor ?></td>
+                            <td class="center"><?php echo $value->col_nome ?></td>
+                            <td class="center"><?php echo $value->fpg_forma ?></td>
+                            <?php
+                              if($value->ser_sts_id == 3){
+                              ?>
+                                <td style="text-align:center"><a href="servicoConcluido.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }elseif($value->ser_sts_id == 4){
+                            ?>
+                              <td style="text-align:center"><a href="servicoCancelado.php"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                          }elseif($value->ser_sts_id == 1){
+                            ?>
+                              <td style="text-align:center"><a href="servicoEspera.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                            <?php
+                            }else{
+                              ?>
+                                <td style="text-align:center"><a href="produtoServico.php?id=<?php echo $value->ser_id ?>"><i class="fa fa-share"></i> Detalhes</a></td>
+                              <?php
+                            }
+                             ?>
+
+                        </tr>
+                        <?php
+                        }
+                       ?>
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>CLIENTE</th>
+                      <th>CARRO</th>
+                      <th>VALOR</th>
+                      <th>MECANICO</th>
+                      <th>PAGAMENTO</th>
+                      <th></th>
+                    </tr>
+                    </tfoot>
+                    </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+          <?php } ?>
+    <!-- fim da row -->
         </div>
         </div>
         </div>

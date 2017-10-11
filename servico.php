@@ -3,7 +3,19 @@
 require_once 'lib/Servico.php';
 require_once 'lib/Colaboradores.php';
 require_once 'lib/Cliente.php';
- ?>
+
+$clie = new Clientes();
+
+$c = new Clientes();
+$cl = array();
+$clientes = $c->clientesJSON();
+foreach ($c->listarClienteSV() as $key => $value) {
+  $cl[] = $value;
+}
+$jsonclientes = json_encode($cl);
+?>
+
+?>
 <html>
 
 <head>
@@ -11,6 +23,7 @@ require_once 'lib/Cliente.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Language" content="pt-br">
+
     <title>Serviços</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,11 +34,13 @@ require_once 'lib/Cliente.php';
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 <script type="text/javascript">
+
 function iniciarServico(){
 
   var cliente = document.getElementById('cliente').value;
   var mecanico = document.getElementById('mecanico').value;
   var status = 2;
+
   if(mecanico == 12){
     status = 1;
   }
@@ -50,6 +65,7 @@ function iniciarServico(){
 </head>
 
 <body class="mini-navbar">
+  <input type="hidden" name="cli" id="cli" value='<?php echo $jsonclientes ?>'>
 
     <div id="wrapper">
 
@@ -85,7 +101,7 @@ function iniciarServico(){
                 </li>
 
                 <li>
-                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">ServiÃ§os</span></a>
+                    <a href="servico.php"><i class="fa fa-wrench"></i> <span class="nav-label">Serviços</span></a>
                 </li>
                 <li>
                     <a href="cliente.php"><i class="fa fa-user"></i> <span class="nav-label">Clientes</span></a>
@@ -233,11 +249,11 @@ function iniciarServico(){
                 </div>
             </div>
         <div class="wrapper wrapper-content animated fadeInRight">
-
+        <input type="hidden" name="cont" id="cont" value="<?php echo $cont; ?>">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins collapsed">
-                        <div class="ibox-title">
+                        <div class="ibox-title collapse-link">
                             <h5>Inicie um novo serviço</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
@@ -261,20 +277,13 @@ function iniciarServico(){
                             <form method="get" class="form-horizontal">
                                 <div class="form-group"><label class="col-sm-2 control-label">Cliente</label>
                                     <div class="col-sm-10">
-                                      <select class="form-control" name="cliente" id="cliente">
-                                        <option value="0">Selecione um Cliente</option>
-                                        <?php
-                                        $c = new Clientes();
-                                          foreach ($c->listarClientes() as $key => $value) {
-                                            ?>
-                                              <option value="<?php echo $value->cli_id ?>"><?php echo $value->cli_nome." - ".$value->car_descricao ?></option>
-                                            <?php
-                                          }
-                                         ?>
-                                      </select>
+                                        <!--<input type="text" id="autocomplete" class="typeahead_3 form-control" />
+                                      <input type="hidden" name="cliente" id="cliente" value="">-->
+                                      <input type="text" placeholder="item..." id="autocomplete" class="typeahead_3 form-control" />
+                                      <input type="hidden" name="cliente" id="cliente" value="">
                                     </div>
                                 </div>
-                                <div class="form-group"><label class="col-sm-2 control-label">MecÃ¢nico</label>
+                                <div class="form-group"><label class="col-sm-2 control-label">Mecânico</label>
                                     <div class="col-sm-10">
                                       <select class="form-control" name="mecanico" id="mecanico">
                                         <option value="0">Selecione um mecânico</option>
@@ -338,6 +347,7 @@ function iniciarServico(){
                         <th>MECANICO</th>
                         <th>STATUS</th>
                         <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -371,7 +381,7 @@ function iniciarServico(){
                               <?php
                             }
                              ?>
-
+                             <td style="text-align:center;"><a href="notaEstilizada.php?id=<?php echo $value->ser_id ?>" target="_blank" style="color:#888888"><i class="fa fa-print"></i></a></td>
                         </tr>
                         <?php
                         }
@@ -387,6 +397,7 @@ function iniciarServico(){
                       <th>MECANICO</th>
                       <th>STATUS</th>
                       <th></th>
+                      <th></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -398,7 +409,7 @@ function iniciarServico(){
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                <div class="ibox float-e-margins collapsed">
+                <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h5>Todos Serviços</h5>
                         <div class="ibox-tools">
@@ -488,57 +499,6 @@ function iniciarServico(){
                     </div>
                 </div>
             </div>
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins collapsed">
-                    <div class="ibox-title">
-                        <h5>Inicie um novo serviço</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <form method="get" class="form-horizontal">
-                            <div class="form-group"><label class="col-sm-2 control-label">Mecânico</label>
-                                <div class="col-sm-10">
-                                  <select class="form-control" name="mecanico" id="mecanico">
-                                    <option value="0">Selecione um mecânico</option>
-                                    <option value="12">Colocar em espera</option>
-                                    <?php
-                                    $c = new Colaboradores();
-                                      foreach ($c->listarColaboradores() as $key => $value) {
-                                        ?>
-                                          <option value="<?php echo $value->col_id ?>"><?php echo $value->col_nome ?></option>
-                                        <?php
-                                      }
-                                     ?>
-                                  </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                              <div class="pull-right">
-                                <button class="btn btn-white" type="reset" >Cancelar</button>
-                                <a href="relatorioSemanal.php?id=<?php echo "15" ?>" target="_blank" class="btn btn-primary" style="margin-left:10px;margin-right:20px;">Relatório Semanal</a>
-                              </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
         </div>
@@ -560,6 +520,37 @@ function iniciarServico(){
     <!-- iCheck -->
     <script src="js/plugins/iCheck/icheck.min.js"></script>
 
+
+
+    <!-- Typehead -->
+    <script src="js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+
+
+    <script>
+
+    var c = [];
+    var cli = null;
+
+        var jsoncl = document.getElementById('cli').value;
+
+        var obj = JSON.parse(jsoncl);
+      for (var cliente in obj) {
+        var nme = (obj[cliente].name).concat(" ");
+        var id = (obj[cliente].id).concat(" ");
+        c.push({name: nme, id:id});
+      }
+        $(document).ready(function(){
+
+            $('.typeahead_3').typeahead({
+              source: c,
+              updater: function(item) {
+                document.getElementById('cliente').value = item.id;
+                  return item;
+              }
+            });
+
+      });
+    </script>
 
     <!-- Page-Level Scripts -->
     <script>
